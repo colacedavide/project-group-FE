@@ -1,12 +1,9 @@
 //import dei componenti di context e useState
 import { useState, createContext, useContext } from "react";
 
-<<<<<<< HEAD
-=======
 //import axios
 import axios from "axios";
 
->>>>>>> Branch-di-Luca-G
 //salviamo su una variabile il createContext
 const GlobalContext = createContext();
 
@@ -15,8 +12,6 @@ function GlobalProvider({ children }) {
     //creiamo una variabile di stato per settare l'attivazione e la disattivazione del Loader
     const [isLoading, setIsLoading] = useState(false);
 
-<<<<<<< HEAD
-=======
     //creazione varibile endpoint in un salvare l'API
     const endpointIndexProducts = "http://localhost:3000/api/product";
 
@@ -41,20 +36,15 @@ function GlobalProvider({ children }) {
             });
     };
 
->>>>>>> Branch-di-Luca-G
     return (
         <GlobalContext.Provider
             value={{
                 isLoading,
-<<<<<<< HEAD
-                setIsLoading,
-=======
                 products,
                 endpointIndexProducts,
                 setIsLoading,
                 setProducts,
                 fetchProducts
->>>>>>> Branch-di-Luca-G
             }}
         >
             {children}

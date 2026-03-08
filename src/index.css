@@ -15,16 +15,10 @@ ul {
 /* Header */
 
 header {
-<<<<<<< HEAD
-    background-image: url(./img/home_container_table.jpg);
-    background-position: center;
-
-=======
     position: sticky;
     top: 0;
     z-index: 999;
     background-color: rgba(0, 0, 0, 0.9);
->>>>>>> Branch-di-Luca-G
 }
 
 .header-link-container {
@@ -43,11 +37,7 @@ header {
 
 .header-link:hover {
     padding-bottom: 15px;
-<<<<<<< HEAD
-    border-bottom: 4px solid black;
-=======
     border-bottom: 4px solid white;
->>>>>>> Branch-di-Luca-G
 
 }
 
@@ -61,17 +51,6 @@ main {
     background-image: url(./img/home-main-floor.webp);
 }
 
-<<<<<<< HEAD
-.hero-section {
-    background-color: aqua;
-    height: 300px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-=======
->>>>>>> Branch-di-Luca-G
 .home-container {
     background-color: brown;
     width: 90%;
@@ -81,23 +60,15 @@ main {
     gap: 2rem;
     padding: 4rem;
     background-image: url(./img/home_container_table.avif);
-<<<<<<< HEAD
-    margin-top: 2rem;
-=======
-
->>>>>>> Branch-di-Luca-G
     margin-bottom: 2rem;
     border-radius: 20px;
 }
 
-<<<<<<< HEAD
-=======
 .home-subtitle {
     text-align: center;
     margin-top: 1rem;
 }
 
->>>>>>> Branch-di-Luca-G
 .card-container {
     flex-basis: calc((100% - 10rem) / 5);
     aspect-ratio: 14 / 17;
@@ -142,12 +113,6 @@ main {
     font-weight: bold;
 }
 
-<<<<<<< HEAD
-/* RegionPage */
-
-.region-container {
-    background-color: brown;
-=======
 /* HeroSection */
 
 .hero-section {
@@ -196,7 +161,6 @@ main {
 /* RegionPage */
 
 .region-container {
->>>>>>> Branch-di-Luca-G
     width: 90%;
     margin: 0 auto;
     display: flex;

@@ -1,10 +1,3 @@
-<<<<<<< HEAD
-
-function ProductPage() {
-
-    return (
-        <h2>Product Page</h2>
-=======
 //import axios
 import axios from "axios";
 
@@ -64,7 +57,6 @@ function ProductPage() {
             <img src={product.image} alt={product.name} />
             <Link to="/">Back to home</Link>
         </>
->>>>>>> Branch-di-Luca-G
     )
 }
 

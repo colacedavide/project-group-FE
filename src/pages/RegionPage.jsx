@@ -45,25 +45,6 @@ function RegionPage() {
 
     return (
         <div className="region-container">
-<<<<<<< HEAD
-            {regions.map(region => {
-                return (
-                    <div
-                        className="region-card-container"
-                        key={region.id}>
-                        <div className="region-text-container">
-                            <Link className="card-link" to={"/product/:id"}>
-                                {region.name}
-                            </Link>
-                        </div>
-                        <div className="region-img-container">
-                            <img className="card-image"
-                                src={region.image} alt={region.name} />
-                        </div>
-                    </div>
-                )
-            })}
-=======
             {regions
                 //mescola l'array
                 .sort(() => Math.random() - 0.5)
@@ -84,7 +65,6 @@ function RegionPage() {
                         </div>
                     )
                 })}
->>>>>>> Branch-di-Luca-G
         </div>
     )
 }
