@@ -51,9 +51,6 @@ function RegionProductPage() {
     //richiamiamo la funzione fetchProducts (una sola volta) al motnaggio della pagine grazie ad useEffect
     useEffect(fetchRegionProducts, []);
 
-    console.log(products);
-
-
     return (
         <main>
 
