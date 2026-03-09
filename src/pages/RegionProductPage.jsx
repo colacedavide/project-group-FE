@@ -44,7 +44,7 @@ function RegionProductPage() {
             //facciamo in modo che a chiamta effettuata la varibile di stato torni false e scompaia il Loader
             .finally(() => {
                 //metto questi secondi per verificare che funzioni
-                setTimeout(() => setIsLoading(false), 1000);
+                setIsLoading(false)
             });
     };
 
