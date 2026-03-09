@@ -8,10 +8,11 @@ import { GlobalProvider } from "./context/GlobalContext"
 import DefaultLayout from "./layouts/DefaultLayout"
 //import NotFound Page
 import NotFound from "./pages/NotFound"
-//import HomePage, ProductPage e RegionPage
+//import HomePage, ProductPage, RegionPage e RegionProductPage 
 import HomePage from "./pages/HomePage"
 import ProductPage from "./pages/ProductPage"
 import RegionPage from "./pages/RegionPage"
+import RegionProductPage from "./pages/RegionProductPage"
 
 function App() {
 
@@ -23,6 +24,7 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/product/:id" element={<ProductPage />} />
             <Route path="/region/" element={<RegionPage />} />
+            <Route path="/region/:name" element={<RegionProductPage />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>

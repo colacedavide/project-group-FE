@@ -54,7 +54,7 @@ function RegionPage() {
                             className="region-card-container"
                             key={region.id}>
                             <div className="region-text-container">
-                                <Link className="card-link" to={"/product/:id"}>
+                                <Link className="card-link" to={`/region/${region.name}`}>
                                     {region.name}
                                 </Link>
                             </div>

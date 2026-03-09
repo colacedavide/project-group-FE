@@ -55,7 +55,7 @@ function ProductPage() {
     return (
         <>
             <img src={product.image} alt={product.name} />
-            <Link to="/">Back to home</Link>
+            <Link to="/">Torna alla home</Link>
         </>
     )
 }
