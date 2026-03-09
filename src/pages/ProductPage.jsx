@@ -10,6 +10,9 @@ import { useGlobal } from "../context/GlobalContext";
 //import Link di connessione rotte, useParams e useNavigate
 import { Link, useParams, useNavigate } from "react-router-dom"
 
+// import del component card prodotto
+import ProductCard from "../components/ProductCard";
+
 
 function ProductPage() {
 
@@ -54,8 +57,10 @@ function ProductPage() {
 
     return (
         <>
-            <img src={product.image} alt={product.name} />
+            {product && <ProductCard product={product} />}
+
             <Link to="/">Back to home</Link>
+
         </>
     )
 }
