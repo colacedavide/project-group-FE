@@ -1,3 +1,6 @@
+// Card del prodotto
+
+
 function ProductCard({ product }) {
 
     return (
