@@ -31,6 +31,7 @@ function HomePage() {
 
         axios.get("http://localhost:3000/api/products/favorites")
             .then(res => {
+                console.log("FAVORITES API:", res.data);
                 setFavorites(res.data);
             })
             .catch(err => {
@@ -83,9 +84,15 @@ function HomePage() {
 
     //richiamiamo la funzione fetchProducts e fetchRegions (una sola volta) al motnaggio della pagine grazie ad useEffect
     useEffect(() => {
+
         fetchProducts();
-        fetchRegions();
+
+        if (fetchRegions) {
+            fetchRegions();
+        }
+
         fetchFavorites();
+
     }, []);
 
 
