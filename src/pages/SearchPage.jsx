@@ -14,6 +14,8 @@ function SearchPage() {
     const [searchedItems, setSearchedItems] = useState([]);
     //var di stato per caricameto chiamata axiois
     const [isLoading, setIsLoading] = useState(true);
+    //var di stato che gestisce grilgiato o listato della pagina
+    const [isGridActive, setIsGridActive] = useState(true)
 
     useEffect(() => {
         setIsLoading(true);
@@ -25,8 +27,10 @@ function SearchPage() {
                 setSearchedItems(res.data);
                 setIsLoading(false);
             })
-            .catch((err) => console.log(err));
-        setIsLoading(false);
+            .catch((err) => {
+                console.log(err);
+                setIsLoading(false);
+            });
     }, [searched]);
 
     //se is loading é true gestisci il caricamento
@@ -43,11 +47,17 @@ function SearchPage() {
             {searchedItems.length > 0 ? (
                 <div>
                     <h2>risultati per: {searched}</h2>
-                    <div className="home-container">
-                        {searchedItems.map(item => <div className="card-container" key={item.id}>
-                            <div className="img-container">
-                                <img className="card-image" src={item.image} alt={item.name} />
-                            </div>
+                    <button onClick={() => { setIsGridActive(true) }}>Vista Griglia</button>
+                    <button onClick={() => { setIsGridActive(false) }}>Vista Lista</button>
+                    <div className={isGridActive ? "home-container" : "list-layout"}>
+                        {searchedItems.map(item => <div className={isGridActive ? "card-container" : "list-item"}
+                            key={item.id}>
+                            {/* operatore logico && per mostarere immagine solo se isGridActive é true */}
+                            {isGridActive && (
+                                <div className="img-container">
+                                    <img className="card-image" src={item.image} alt={item.name} />
+                                </div>
+                            )}
                             <div className="text-container">
                                 <Link className="card-link" to={`/product/${item.slug}`}>
                                     {item.name}

@@ -273,3 +273,20 @@ footer {
     color: white;
     cursor: pointer;
 }
+
+/* vista lista */ 
+.list-layout {
+    display: flex;
+    flex-direction: column; /* Forza gli elementi uno sotto l'altro */
+    gap: 20px;              /* Spazio tra le card allungate */
+    width: 100%;            /* Prende tutta la larghezza disponibile */
+    padding: 10px;
+}
+
+.list-item {
+    width: 100%;            /* La card si allunga per tutta la riga */
+    display: block;         /* Per ora teniamo il contenuto standard */
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: white;
+}
