@@ -24,7 +24,7 @@ function SearchPage() {
         //chiamata axios
         axios.get(endpoint)
             .then((res) => {
-                setSearchedItems(res.data);
+                setSearchedItems(res.data.results);
                 setIsLoading(false);
             })
             .catch((err) => {
