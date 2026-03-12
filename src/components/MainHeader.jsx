@@ -1,4 +1,6 @@
 import { NavLink } from "react-router-dom"
+//importo searchBar
+import SearchBar from "./SearchBar"
 
 function MainHeader() {
 
@@ -20,6 +22,7 @@ function MainHeader() {
                     </NavLink>
                 </li>
             </ul>
+            <SearchBar />
         </header>
     )
 }
