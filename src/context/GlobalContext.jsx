@@ -15,9 +15,6 @@ function GlobalProvider({ children }) {
     //creazione varibile endpoint in un salvare l'API
     const endpointIndexProducts = "http://localhost:3000/api/products";
 
-    //creazione varibile endpoint in un salvare l'API
-    const endpointRegions = "http://localhost:3000/api/regions";
-
     //creazione varbile di stato come un array vuoto
     const [products, setProducts] = useState([]);
 
