@@ -13,12 +13,9 @@ import HeroSection from "../components/HeroSection";
 //import axios
 import axios from "axios";
 
-<<<<<<< HEAD
-=======
 //import card prodotto
 import ProductCard from "../components/ProductCard";
 
->>>>>>> branch_LucaS
 function HomePage() {
 
     //importiamo gli elementi che ci servono tramite la useContext
@@ -28,8 +25,6 @@ function HomePage() {
     //creazione varibile di stato come stringa vuota
     const [selected, setSelected] = useState("");
 
-<<<<<<< HEAD
-=======
     //var di stato per prodotti favoriti
     const [favorites, setFavorites] = useState([]);
 
@@ -90,17 +85,13 @@ function HomePage() {
 
 
 
->>>>>>> branch_LucaS
     //creiamo una funzione per recuperare il valore selezionato dalla select
     const handleChange = (e) => {
         setSelected(e.target.value);
     };
 
-<<<<<<< HEAD
-=======
 
 
->>>>>>> branch_LucaS
     //creazione varibile endpoint in un salvare l'API
     const endpointProductsRegion = `http://localhost:3000/api/regions/name/${selected}/products`;
 
@@ -134,10 +125,6 @@ function HomePage() {
 
     //richiamiamo la funzione fetchProducts e fetchRegions (una sola volta) al motnaggio della pagine grazie ad useEffect
     useEffect(() => {
-<<<<<<< HEAD
-        fetchProducts();
-        fetchRegions();
-=======
 
         fetchProducts();
 
@@ -149,7 +136,6 @@ function HomePage() {
         fetchOils();
         fetchRandomProducts();
 
->>>>>>> branch_LucaS
     }, []);
 
 
@@ -163,108 +149,42 @@ function HomePage() {
 
             <select value={selected} onChange={handleChange}>
                 <option value="">-- Seleziona una regione --</option>
-<<<<<<< HEAD
-    {
-        regions.map((region) => (
-=======
                 {regions?.map((region) => (
->>>>>>> branch_LucaS
-            <option key={region.id} value={region.name}>
-                {region.name}
-            </option>
-        ))
-    }
+                    <option key={region.id} value={region.name}>
+                        {region.name}
+                    </option>
+                ))
+                }
             </select >
 
-        { selected === "" ? (
-        <>
-            <h2 className="home-subtitle">Tavola dei preferiti</h2>
-            <div className="home-container">
-                {favorites.map(product => (
-                    <ProductCard key={product.id} product={product} />
-                ))}
-            </div>
+            {selected === "" ? (
+                <>
+                    <h2 className="home-subtitle">Tavola dei preferiti</h2>
+                    <div className="home-container">
+                        {favorites.map(product => (
+                            <ProductCard key={product.id} product={product} />
+                        ))}
+                    </div>
 
-            <h2 className="home-subtitle">Tavola degli oli</h2>
-            <div className="home-container">
-<<<<<<< HEAD
-    {
-        products
-            .sort(() => Math.random() - 0.5)
-        .filter(product => product.category_id === 23)
-        .map(product => (
-            <div className="card-container" key={product.id}>
-                <div className="img-container">
-                    <img className="card-image" src={product.image} alt={product.name} />
-                </div>
-                <div className="text-container">
-                    <Link className="card-link" to={`/product/${product.slug}`}>
-                        {product.name}
-                    </Link>
-                    <div>{product.weight} g</div>
-                    <div className="card-price">prezzo: {product.price} &euro;</div>
-                </div>
-            </div>
-        ))
-    }
-=======
+                    <h2 className="home-subtitle">Tavola degli oli</h2>
+                    <div className="home-container">
                         {oils.map(product => (
                             <ProductCard key={product.id} product={product} />
                         ))}
->>>>>>> branch_LucaS
                     </div >
 
                     <h2 className="home-subtitle">Tavola imbandita</h2>
                     <div className="home-container">
-<<<<<<< HEAD
-    {
-        products
-            .sort(() => Math.random() - 0.5)
-        .map(product => (
-            <div className="card-container" key={product.id}>
-                <div className="img-container">
-                    <img className="card-image" src={product.image} alt={product.name} />
-                </div>
-                <div className="text-container">
-                    <Link className="card-link" to={`/product/${product.slug}`}>
-                        {product.name}
-                    </Link>
-                    <div>{product.weight} g</div>
-                    <div className="card-price">prezo: {product.price} &euro;</div>
-                </div>
-            </div>
-        ))
-    }
-=======
                         {randomProducts.map(product => (
                             <ProductCard key={product.id} product={product} />
                         ))}
->>>>>>> branch_LucaS
                     </div >
                 </>
             ) : (
-        <>
-            <h2 className="home-subtitle">Tavola imbandita</h2>
-            <div className="home-container">
-                {productsRegion.map(product => (
-<<<<<<< HEAD
-                    <div className="card-container" key={product.id}>
-                        <div className="img-container">
-                            <img
-                                className="card-image"
-                                src={product.image.replace('regions-images', 'product-images')}
-                                alt={product.name}
-                            />
-                        </div>
-                        <div className="text-container">
-                            <Link className="card-link" to={`/product/${product.slug}`}>
-                                {product.name}
-                            </Link>
-                            <div>{product.weight} g</div>
-                            <div className="card-price">prezo: {product.price} &euro;</div>
-                        </div>
-                    </div>
-=======
+                <>
+                    <h2 className="home-subtitle">Tavola imbandita</h2>
+                    <div className="home-container">
+                        {productsRegion.map(product => (
                             <ProductCard
                                 key={product.id}
                                 product={product}
@@ -272,12 +192,11 @@ function HomePage() {
                                     image.replace('regions-images', 'product-images')
                                 }
                             />
->>>>>>> branch_LucaS
-                ))}
-            </div>
-        </>
-    )
-}
+                        ))}
+                    </div>
+                </>
+            )
+            }
         </main >
     )
 }

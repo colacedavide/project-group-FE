@@ -16,9 +16,6 @@ import ProductCard from "../components/ProductCard";
 function RegionPage() {
 
     //importiamo gli elementi che ci servono tramite la useContext
-<<<<<<< HEAD
-    const { regions, fetchRegions } = useGlobal();
-=======
     const { setIsLoading } = useGlobal();
 
     //creazione varibile endpoint in un salvare l'API
@@ -46,7 +43,6 @@ function RegionPage() {
                 setTimeout(() => setIsLoading(false), 1000);
             });
     };
->>>>>>> branch_LucaS
 
     function fetchRegionProducts(regionName) {
         setIsLoading(true);
