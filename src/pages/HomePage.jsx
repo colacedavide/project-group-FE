@@ -13,6 +13,9 @@ import HeroSection from "../components/HeroSection";
 //import axios
 import axios from "axios";
 
+//import card prodotto
+import ProductCard from "../components/ProductCard";
+
 function HomePage() {
 
     //importiamo gli elementi che ci servono tramite la useContext
@@ -25,6 +28,12 @@ function HomePage() {
     //var di stato per prodotti favoriti
     const [favorites, setFavorites] = useState([]);
 
+    //var di stato per gli oli
+    const [oils, setOils] = useState([]);
+
+    //var prodotti random
+    const [randomProducts, setRandomProducts] = useState([]);
+
     function fetchFavorites() {
 
         setIsLoading(true);
@@ -33,6 +42,38 @@ function HomePage() {
             .then(res => {
                 console.log("FAVORITES API:", res.data);
                 setFavorites(res.data);
+            })
+            .catch(err => {
+                console.log(err);
+            })
+            .finally(() => {
+                setIsLoading(false);
+            });
+    }
+
+    function fetchOils() {
+
+        setIsLoading(true);
+
+        axios.get("http://localhost:3000/api/products/oils")
+            .then(res => {
+                setOils(res.data);
+            })
+            .catch(err => {
+                console.log(err);
+            })
+            .finally(() => {
+                setIsLoading(false);
+            });
+    }
+
+    function fetchRandomProducts() {
+
+        setIsLoading(true);
+
+        axios.get("http://localhost:3000/api/products/random")
+            .then(res => {
+                setRandomProducts(res.data);
             })
             .catch(err => {
                 console.log(err);
@@ -92,6 +133,8 @@ function HomePage() {
         }
 
         fetchFavorites();
+        fetchOils();
+        fetchRandomProducts();
 
     }, []);
 
@@ -118,60 +161,22 @@ function HomePage() {
                     <h2 className="home-subtitle">Tavola dei preferiti</h2>
                     <div className="home-container">
                         {favorites.map(product => (
-                            <div className="card-container" key={product.id}>
-                                <div className="img-container">
-                                    <img className="card-image" src={product.image} alt={product.name} />
-                                </div>
-                                <div className="text-container">
-                                    <Link className="card-link" to={`/product/${product.slug}`}>
-                                        {product.name}
-                                    </Link>
-                                    <div>{product.weight} g</div>
-                                    <div className="card-price">prezzo: {product.price} &euro;</div>
-                                </div>
-                            </div>
+                            <ProductCard key={product.id} product={product} />
                         ))}
                     </div>
 
                     <h2 className="home-subtitle">Tavola degli oli</h2>
                     <div className="home-container">
-                        {products
-                            .sort(() => Math.random() - 0.5)
-                            .filter(product => product.category_id === 23)
-                            .map(product => (
-                                <div className="card-container" key={product.id}>
-                                    <div className="img-container">
-                                        <img className="card-image" src={product.image} alt={product.name} />
-                                    </div>
-                                    <div className="text-container">
-                                        <Link className="card-link" to={`/product/${product.slug}`}>
-                                            {product.name}
-                                        </Link>
-                                        <div>{product.weight} g</div>
-                                        <div className="card-price">prezzo: {product.price} &euro;</div>
-                                    </div>
-                                </div>
-                            ))}
+                        {oils.map(product => (
+                            <ProductCard key={product.id} product={product} />
+                        ))}
                     </div>
 
                     <h2 className="home-subtitle">Tavola imbandita</h2>
                     <div className="home-container">
-                        {products
-                            .sort(() => Math.random() - 0.5)
-                            .map(product => (
-                                <div className="card-container" key={product.id}>
-                                    <div className="img-container">
-                                        <img className="card-image" src={product.image} alt={product.name} />
-                                    </div>
-                                    <div className="text-container">
-                                        <Link className="card-link" to={`/product/${product.slug}`}>
-                                            {product.name}
-                                        </Link>
-                                        <div>{product.weight} g</div>
-                                        <div className="card-price">prezo: {product.price} &euro;</div>
-                                    </div>
-                                </div>
-                            ))}
+                        {randomProducts.map(product => (
+                            <ProductCard key={product.id} product={product} />
+                        ))}
                     </div>
                 </>
             ) : (
@@ -179,22 +184,13 @@ function HomePage() {
                     <h2 className="home-subtitle">Tavola imbandita</h2>
                     <div className="home-container">
                         {productsRegion.map(product => (
-                            <div className="card-container" key={product.id}>
-                                <div className="img-container">
-                                    <img
-                                        className="card-image"
-                                        src={product.image.replace('regions-images', 'product-images')}
-                                        alt={product.name}
-                                    />
-                                </div>
-                                <div className="text-container">
-                                    <Link className="card-link" to={`/product/${product.slug}`}>
-                                        {product.name}
-                                    </Link>
-                                    <div>{product.weight} g</div>
-                                    <div className="card-price">prezo: {product.price} &euro;</div>
-                                </div>
-                            </div>
+                            <ProductCard
+                                key={product.id}
+                                product={product}
+                                imageOverride={(image) =>
+                                    image.replace('regions-images', 'product-images')
+                                }
+                            />
                         ))}
                     </div>
                 </>

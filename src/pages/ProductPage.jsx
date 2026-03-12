@@ -11,7 +11,7 @@ import { useGlobal } from "../context/GlobalContext";
 import { Link, useParams, useNavigate } from "react-router-dom"
 
 // import del component card prodotto
-import ProductCard from "../components/ProductCard";
+import ProductCardDetails from "../components/ProductCardDetails";
 
 
 function ProductPage() {
@@ -57,7 +57,7 @@ function ProductPage() {
 
     return (
         <>
-            {product && <ProductCard product={product} />}
+            {product && <ProductCardDetails product={product} />}
 
             <Link to="/">Back to home</Link>
 
