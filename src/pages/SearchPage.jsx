@@ -10,17 +10,54 @@ function SearchPage() {
 
     const [searchParams] = useSearchParams();
     const searched = searchParams.get("query");
-    //var di stato per salvare prodotti cercati
+    //var di stato per salvare prodotti cercati dal db
     const [searchedItems, setSearchedItems] = useState([]);
     //var di stato per caricameto chiamata axiois
     const [isLoading, setIsLoading] = useState(true);
     //var di stato che gestisce grilgiato o listato della pagina
     const [isGridActive, setIsGridActive] = useState(true)
+    //var di stato per salvare le categorie che arrivano da db
+    const [categories, setCategories] = useState([])
+    //var di stato che gestisce al select dell'utente
+    const [selectedCategory, setSelectedCategory] = useState("")
+    //var di stato che salva regioni che arrivano dal db
+    const [regions, setRegions] = useState([])
+    //var di stato che gestisce select untente
+    const [selectedRegion, setSelectedRegions] = useState("")
 
+    //chiamata axios per riempire array regioni al montaggiuo del componente con use effect
+    useEffect(() => {
+        //endpoint che punta alla regioni
+        const endpoint = 'http://localhost:3000/api/regions'
+        //chiamata axios
+        axios.get(endpoint)
+            .then((res) => {
+                setRegions(res.data);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }, [])
+
+    //chiamata axiaos oer popolare array delle categoire al primo montaggio componente con use effect
+    useEffect(() => {
+        //enpoint che mi richiama le categorie
+        const endpoint = `http://localhost:3000/api/products/categories`
+        //chiamata axios
+        axios.get(endpoint)
+            .then((res) => {
+                setCategories(res.data);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }, [])
+
+    //chiamata axios per popolare array parola cercata al primo montaggio componente con useEffect
     useEffect(() => {
         setIsLoading(true);
         //salvo endpoint dentro una costante
-        const endpoint = `http://localhost:3000/api/products?search=${searched}` //uso backtic per inserrie van "searched" dentro la stringa
+        const endpoint = `http://localhost:3000/api/products?search=${searched}&category=${selectedCategory}&region=${selectedRegion}` //uso backtic per inserrie van "searched" dentro la stringa
         //chiamata axios
         axios.get(endpoint)
             .then((res) => {
@@ -31,7 +68,7 @@ function SearchPage() {
                 console.log(err);
                 setIsLoading(false);
             });
-    }, [searched]);
+    }, [searched, selectedCategory, selectedRegion]);
 
     //se is loading é true gestisci il caricamento
     if (isLoading) {
@@ -44,6 +81,31 @@ function SearchPage() {
 
     return (
         <div>
+
+            {/* select categoria */}
+            <div className="filter-section">
+                <label>Categoria: </label>
+                <select value={selectedCategory}
+                    onChange={(e) => setSelectedCategory(e.target.value)}>
+                    <option value="">Tutte le categorie</option>
+                    {categories.map(c => (
+                        <option key={c.id} value={c.name}>{c.name}</option>
+                    ))}
+                </select>
+            </div>
+
+            {/* select regioni */}
+            <div className="filter-region">
+                <label>Regione: </label>
+                <select value={selectedRegion}
+                    onChange={(e) => setSelectedRegions(e.target.value)}>
+                    <option value="">Tutte le regioni</option>
+                    {regions.map(r => (
+                        <option key={r.id} value={r.name}>{r.name}</option>
+                    ))}
+                </select>
+            </div>
+
             {searchedItems.length > 0 ? (
                 <div>
                     <h2>risultati per: {searched}</h2>
