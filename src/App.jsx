@@ -13,6 +13,9 @@ import HomePage from "./pages/HomePage"
 import ProductPage from "./pages/ProductPage"
 import RegionPage from "./pages/RegionPage"
 import RegionProductPage from "./pages/RegionProductPage"
+//import CartPage e CheckoutPahe
+import CartPage from "./pages/CartPage"
+import CheckoutPage from "./pages/CheckoutPage"
 
 function App() {
 
@@ -24,7 +27,9 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/product/:id" element={<ProductPage />} />
             <Route path="/region/" element={<RegionPage />} />
-            <Route path="/region/:name" element={<RegionProductPage />} />
+            <Route path="/region/:name/products" element={<RegionProductPage />} />
+            <Route path="/cart/" element={<CartPage />} />
+            <Route path="/checkout/" element={<CheckoutPage />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>

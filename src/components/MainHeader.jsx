@@ -1,3 +1,4 @@
+//import NavLink
 import { NavLink } from "react-router-dom"
 
 function MainHeader() {
@@ -20,6 +21,13 @@ function MainHeader() {
                     </NavLink>
                 </li>
             </ul>
+            <div className="cart-link-contrainer">
+                <NavLink
+                    className="cart-link"
+                    to={"/cart"}>
+                    Carello
+                </NavLink>
+            </div>
         </header>
     )
 }

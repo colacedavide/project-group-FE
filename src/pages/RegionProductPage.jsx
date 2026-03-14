@@ -49,7 +49,9 @@ function RegionProductPage() {
     };
 
     //richiamiamo la funzione fetchProducts (una sola volta) al motnaggio della pagine grazie ad useEffect
-    useEffect(fetchRegionProducts, []);
+    useEffect(() => {
+        fetchRegionProducts();
+    }, [endpoint, redirect]);
 
     return (
         <main>

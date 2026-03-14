@@ -1,4 +1,11 @@
+//import useGlobal
+import { useGlobal } from "../context/GlobalContext";
+
 function ProductCardDetails({ product }) {
+
+    //importiamo gli elementi che ci servono tramite la useContext
+    const { addToCart } = useGlobal();
+
 
     return (
 
@@ -27,7 +34,9 @@ function ProductCardDetails({ product }) {
                     {product.descriptions}
                 </p>
 
-                <button className="add-cart">
+                <button
+                    onClick={() => addToCart(product)}
+                    className="add-cart">
                     Aggiungi al carrello
                 </button>
 
