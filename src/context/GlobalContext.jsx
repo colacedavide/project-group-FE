@@ -1,5 +1,5 @@
-//import dei componenti di context e useState
-import { useState, createContext, useContext } from "react";
+//import dei componenti di context, useState e useEffect
+import { useState, useEffect, createContext, useContext } from "react";
 
 //import axios
 import axios from "axios";
@@ -41,7 +41,15 @@ function GlobalProvider({ children }) {
 
 
     //creazione variabile di stato per il carello
-    const [cart, setCart] = useState([]);
+    const [cart, setCart] = useState(() => {
+        const savedCart = localStorage.getItem("cart");
+        return savedCart ? JSON.parse(savedCart) : [];
+    });
+
+    //salviamo il carello nel browswer al al cambio della varibile di stato Cart
+    useEffect(() => {
+        localStorage.setItem("cart", JSON.stringify(cart));
+    }, [cart]);
 
     //creazione variabili si statp per indirizzi di spedizione e fatturazione
     const [shippingData, setShippingData] = useState({});
