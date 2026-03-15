@@ -319,6 +319,12 @@ footer {
     font-size: 4rem;
 }
 
+.cheackout-billing-title {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+}
+
 .checkout-input-container {
     display: flex;
     gap: 2rem;

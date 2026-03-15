@@ -4,10 +4,16 @@ import axios from "axios";
 //import useGlobal
 import { useGlobal } from "../context/GlobalContext";
 
+//import useState 
+import { useState } from "react";
+
 function CheckoutPage() {
 
     //importiamo gli elementi che ci servono tramite la useContext
     const { cart, setCart, shippingData, setShippingData, billingData, setBillingData, discountCode, setDiscountCode } = useGlobal();
+
+    //aggiungiamo una varibile di stato per far combaciare i duen dati di fatturazione
+    const [sameAsShipping, setSameAsShipping] = useState(true);
 
     //creazione varibile endpoint in un salvare l'API
     const endpointCheckout = "http://localhost:3000/api/orders/checkout";
@@ -47,7 +53,15 @@ function CheckoutPage() {
     function handleChangeShippingData(e) {
         //prende name e value dall'input
         const { name, value } = e.target;
-        setShippingData({ ...shippingData, [name]: value });
+        //salviamo in una nuova varibile i valori di shippingData
+        const updatedShipping = { ...shippingData, [name]: value };
+        //aggiorniamo shippingData
+        setShippingData(updatedShipping);
+        //se sameAsShipping è vero
+        if (sameAsShipping) {
+            //lo copiamo anche in billing data
+            setBillingData(updatedShipping);
+        }
     }
 
     //creiamo una funzione per generaliziane la presa dei valori dagli input per i dati di fatturazione
@@ -139,7 +153,26 @@ function CheckoutPage() {
                         </div>
 
                         <div className="checkout-dates">
-                            <h2>Dati fatturazione</h2>
+                            <div className="cheackout-billing-title">
+                                <h2>Dati fatturazione</h2>
+
+                                <label>
+                                    <input
+                                        type="checkbox"
+                                        checked={sameAsShipping}
+                                        onChange={(e) => {
+                                            const checked = e.target.checked;
+                                            setSameAsShipping(checked);
+
+                                            if (checked) {
+                                                setBillingData(shippingData);
+                                            }
+                                        }}
+                                    />
+                                    Usa gli stessi dati della spedizione
+                                </label>
+                            </div>
+
                             <div className="checkout-input-container">
                                 <input
                                     placeholder="Nome"
@@ -195,13 +228,15 @@ function CheckoutPage() {
                                     name="province"
                                     value={billingData?.province || ""}
                                     onChange={handleChangeBillingData}
-                                    required />
+                                    required
+                                />
                                 <input
                                     placeholder="CAP"
                                     name="postal_code"
                                     value={billingData?.postal_code || ""}
                                     onChange={handleChangeBillingData}
-                                    required />
+                                    required
+                                />
                                 <input
                                     placeholder="Nazione"
                                     name="country"
