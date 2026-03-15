@@ -55,9 +55,6 @@ function GlobalProvider({ children }) {
     const [shippingData, setShippingData] = useState({});
     const [billingData, setBillingData] = useState({});
 
-    //creazione varibile di codice sconto
-    const [discountCode, setDiscountCode] = useState("");
-
     //creiamo una funzione per aggiungere i prodotti al carello
     function addToCart(product) {
         //cerchiamo nel carrello se il prodotto esiste già, confrontando l'id
@@ -97,6 +94,43 @@ function GlobalProvider({ children }) {
                 //filtriamo l'array: rimangono solo i prodotti con quantità maggiore di 0
                 .filter(p => p.quantity > 0)
         );
+    }
+
+    //creaimo una varibile di codice sconto e una di percentuale
+    const [discountCode, setDiscountCode] = useState("");
+    const [discountPercentage, setDiscountPercentage] = useState(0);
+
+    async function applyDiscount() {
+        //se l'utente non inserisce alcun codice, non facciamo nulla
+        if (!discountCode) {
+            //impostiamo lo sconto a 0 per sicurezza
+            setDiscountPercentage(0);
+            //usciamo dalla funzione senza chiamare il backend
+            return;
+        }
+
+        //se l'utente inserisce un codice di sconto
+        try {
+            //facciamo partire una chiamata al backend per validare il codice sconto
+            const response = await axios.post(
+                "http://localhost:3000/api/discounts/validate",
+                { code: discountCode }
+            );
+
+            //se il codice è valido, aggiorniamo lo stato della percentuale
+            setDiscountPercentage(response.data.percentage);
+
+            //mostriamo un messaggio di conferma all'utente
+            alert(`Codice valido! Sconto ${response.data.percentage}%`);
+
+        } catch (error) {
+            //se il codice non è valido o scaduto, resettiamo lo sconto a 0
+            console.error(error);
+            setDiscountPercentage(0);
+
+            //informiamo l'utente
+            alert("Codice sconto non valido o scaduto");
+        }
     }
 
     // //creiamo una funzione per gestire la chiamta axios alla rotta index
@@ -140,7 +174,11 @@ function GlobalProvider({ children }) {
                 billingData,
                 setBillingData,
                 discountCode,
-                setDiscountCode
+                setDiscountCode,
+                discountPercentage,
+                setDiscountPercentage,
+                applyDiscount
+
             }}
         >
             {children}

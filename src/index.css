@@ -346,10 +346,16 @@ footer {
     justify-content: space-between;
 }
 
+.checkout-discount-container {
+    display: flex;
+    gap: 5rem;
+}
+
 .checkout-button-container {
     display: flex;
     flex-direction: column;
     justify-content: end;
+
 }
 
 .checkout-button {

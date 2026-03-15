@@ -10,7 +10,7 @@ import { useState } from "react";
 function CheckoutPage() {
 
     //importiamo gli elementi che ci servono tramite la useContext
-    const { cart, setCart, shippingData, setShippingData, billingData, setBillingData, discountCode, setDiscountCode } = useGlobal();
+    const { cart, setCart, shippingData, setShippingData, billingData, setBillingData, discountCode, setDiscountCode, discountPercentage, setDiscountPercentage, applyDiscount } = useGlobal();
 
     //aggiungiamo una varibile di stato per far combaciare i duen dati di fatturazione
     const [sameAsShipping, setSameAsShipping] = useState(true);
@@ -18,14 +18,18 @@ function CheckoutPage() {
     //creazione varibile endpoint in un salvare l'API
     const endpointCheckout = "http://localhost:3000/api/orders/checkout";
 
+    //creaimo una costante per definire un prezzo di spedizione 
+    const shippingPrice = 5;
+
     //creiamo una funzione per avviare la chiamta POST al click
     function handleCheckout() {
         axios.post(endpointCheckout, {
             shippingData,
             billingData,
             products: cart,
-            shipping_price: 5,
-            discount_code: discountCode
+            shipping_price: shippingPrice,
+            discount_code: discountCode,
+            discount_percentage: discountPercentage
         })
             .then(res => {
                 const order = res.data.order;
@@ -35,7 +39,8 @@ function CheckoutPage() {
                 order.products.forEach(p => {
                     message += `- ${p.name} x${p.quantity} (€${p.price})\n`;
                 });
-                message += `\nSpedizione: €${order.shipping_price}\nSconto: €${order.discountAmount}`;
+                message += `\nSpedizione: €${shippingPrice}\nSconto: €${discountAmount.toFixed(2)}`;
+                message += `\nTotale finale: €${totalFinal.toFixed(2)}`;
 
                 //mostriamo alert
                 alert(message);
@@ -45,6 +50,7 @@ function CheckoutPage() {
                 setBillingData({});
                 setDiscountCode("");
                 setCart([]);
+                setDiscountPercentage(0);
             })
             .catch(err => console.error("Errore nella chiamata POST:", err));
     }
@@ -70,6 +76,11 @@ function CheckoutPage() {
         const { name, value } = e.target;
         setBillingData({ ...billingData, [name]: value });
     }
+
+    //creaimno constanti per i calcoli per il totale carrello, sconto e totale finale
+    const cartTotal = cart.reduce((sum, p) => sum + p.price * p.quantity, 0);
+    const discountAmount = cartTotal * (discountPercentage / 100);
+    const totalFinal = cartTotal - discountAmount + shippingPrice;
 
     return (
         <main>
@@ -252,13 +263,36 @@ function CheckoutPage() {
 
                     <div className="checkout-footer">
 
-                        <div>
-                            <h2>Codice sconto</h2>
-                            <input
-                                placeholder="Inserisci codice sconto"
-                                value={discountCode || ""}
-                                onChange={e => setDiscountCode(e.target.value)} />
+                        <div className="checkout-discount-container">
+                            <div>
+                                <h2>Codice sconto</h2>
+                                <input
+                                    placeholder="Inserisci codice sconto"
+                                    value={discountCode || ""}
+                                    onChange={e => setDiscountCode(e.target.value)}
+                                />
+                                <button
+                                    type="button"
+                                    onClick={applyDiscount}
+                                >
+                                    Applica
+                                </button>
+                                {discountPercentage > 0 && (
+                                    <p>Sconto applicato: {discountPercentage}%</p>
+                                )}
+                            </div>
+                            <div>
+                                <h4>Totale carrello: €{cartTotal.toFixed(2)}</h4>
+                                {discountPercentage > 0 && (
+                                    <h5>Sconto applicato: €{discountAmount.toFixed(2)} ({discountPercentage}%)</h5>
+                                )}
+                                <h4>Spedizione: €{shippingPrice.toFixed(2)}</h4>
+                                <h3>Totale finale: €{totalFinal.toFixed(2)}</h3>
+                            </div>
                         </div>
+
+
+
                         <div className="checkout-button-container">
                             <button
                                 className="checkout-button"
