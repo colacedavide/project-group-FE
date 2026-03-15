@@ -1,42 +1,86 @@
-//import useGlobal
+//import useGlobal per accedere al contesto globale
 import { useGlobal } from "../context/GlobalContext";
 
-//import Link
+//import Link per navigazione
 import { Link } from "react-router-dom";
+
+//import useEffect e useState
+import { useEffect } from "react";
 
 function CartPage() {
 
-    //importiamo gli elementi che ci servono tramite la useContext
-    const { cart, removeFromCart, addToCart } = useGlobal();
+    //importiamo gli elementi che ci servono dal contesto globale
+    const { cart, removeFromCart, addToCart, shippingPrice, fetchShipping } = useGlobal();
+
+    //calcoliamo il totale carrello dinamicamente
+    const cartTotal = cart.reduce((sum, p) => sum + p.price * p.quantity, 0);
+
+    //effetto per calcolare la spedizione ogni volta che il carrello cambia
+    useEffect(() => {
+        if (cart.length > 0) {
+            //chiamiamo la funzione fetchShipping dal contesto, passando i prodotti del carrello
+            fetchShipping(cart);
+        }
+        //se il carrello è vuoto, shippingPrice verrà automaticamente settato a 0 dentro fetchShipping
+    }, [cart, fetchShipping]);
 
     return (
-        <main>
+        <main
+            className="cart-main"
+        >
             <h1>Carrello</h1>
-            {cart.map(product => (
-                <div key={product.id} >
-                    <h3>{product.name}</h3>
-                    <div className="card-product-container">
-                        <img src={product.image} alt={product.name} className="cart-img" />
-                        <div>
-                            <p>Quantità: {product.quantity}</p>
-                            <p>Prezzo unitario: {product.price} €</p>
+            <div className="cart-container">
+                <div className="cart-products-container">
+                    {cart.length === 0 && <p>Il carrello è vuoto.</p>}
+
+                    {cart.map(product => (
+                        <div
+                            className="cart-product"
+                            key={product.id} >
+                            <h3>{product.name}</h3>
+                            <div className="cart-product-container">
+                                <div className="cart-product-container-element">
+                                    <img src={product.image} alt={product.name} className="cart-img" />
+                                </div>
+                                <div className="cart-product-container-element">
+                                    <p className="cart-product-description">Quantità: {product.quantity}</p>
+                                    <p className="cart-product-description">Prezzo unitario: {product.price.toFixed(2)} €</p>
+                                </div>
+                                <div className="cart-button-container">
+                                    <button
+                                        className="cart-add-remove-button"
+                                        onClick={() => addToCart(product)}>Aggiungi</button>
+                                    <button
+                                        className="cart-add-remove-button"
+                                        onClick={() => removeFromCart(product.id)}>Rimuovi</button>
+                                </div>
+                            </div>
                         </div>
-                        <div className="cart-button-container">
-                            <button onClick={() => addToCart(product)}>Aggiungi</button>
-                            <button onClick={() => removeFromCart(product.id)}>Rimuovi</button>
-                        </div>
+                    ))}
+                </div>
+                <div className="cart-price-container">
+                    <div className="cart-price-border">
+                        <h2 className="cart-price-text">
+                            Totale carrello: {cartTotal.toFixed(2)} €
+                        </h2>
+
+                        <h2 className="cart-price-text">
+                            Spedizione: {shippingPrice === 0 ? "Gratis" : `€${shippingPrice.toFixed(2)}`}
+                        </h2>
+
+                        <h2 className="cart-price-text">
+                            Totale finale: €{(cartTotal + shippingPrice).toFixed(2)}
+                        </h2>
+                    </div>
+                    <div className="cart-checkout-button-container">
+                        <Link
+                            className="cart-checkout-button"
+                            to={"/checkout"}>
+                            Vai al checkout
+                        </Link>
                     </div>
                 </div>
-            ))}
-
-            <h2>
-                Totale: {(cart.reduce((sum, p) => sum + p.price * p.quantity, 0)).toFixed(2)} €
-            </h2>
-            <Link
-
-                to={"/checkout"}>
-                Vai al checkout
-            </Link>
+            </div>
         </main>
     );
 }

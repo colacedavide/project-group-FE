@@ -1,5 +1,5 @@
-//import dei componenti di context e useState
-import { useState, createContext, useContext } from "react";
+//import dei componenti di context, useState e useEffect
+import { useState, useEffect, createContext, useContext } from "react";
 
 //import axios
 import axios from "axios";
@@ -41,14 +41,19 @@ function GlobalProvider({ children }) {
 
 
     //creazione variabile di stato per il carello
-    const [cart, setCart] = useState([]);
+    const [cart, setCart] = useState(() => {
+        const savedCart = localStorage.getItem("cart");
+        return savedCart ? JSON.parse(savedCart) : [];
+    });
+
+    //salviamo il carello nel browswer al al cambio della varibile di stato Cart
+    useEffect(() => {
+        localStorage.setItem("cart", JSON.stringify(cart));
+    }, [cart]);
 
     //creazione variabili si statp per indirizzi di spedizione e fatturazione
     const [shippingData, setShippingData] = useState({});
     const [billingData, setBillingData] = useState({});
-
-    //creazione varibile di codice sconto
-    const [discountCode, setDiscountCode] = useState("");
 
     //creiamo una funzione per aggiungere i prodotti al carello
     function addToCart(product) {
@@ -89,6 +94,72 @@ function GlobalProvider({ children }) {
                 //filtriamo l'array: rimangono solo i prodotti con quantità maggiore di 0
                 .filter(p => p.quantity > 0)
         );
+    }
+
+    //creaimo una varibile di codice sconto e una di percentuale
+    const [discountCode, setDiscountCode] = useState("");
+    const [discountPercentage, setDiscountPercentage] = useState(0);
+
+    async function applyDiscount() {
+        //se l'utente non inserisce alcun codice, non facciamo nulla
+        if (!discountCode) {
+            //impostiamo lo sconto a 0 per sicurezza
+            setDiscountPercentage(0);
+            //usciamo dalla funzione senza chiamare il backend
+            return;
+        }
+
+        //se l'utente inserisce un codice di sconto
+        try {
+            //facciamo partire una chiamata al backend per validare il codice sconto
+            const response = await axios.post(
+                "http://localhost:3000/api/discounts/validate",
+                { code: discountCode }
+            );
+
+            //se il codice è valido, aggiorniamo lo stato della percentuale
+            setDiscountPercentage(response.data.percentage);
+
+            //mostriamo un messaggio di conferma all'utente
+            alert(`Codice valido! Sconto ${response.data.percentage}%`);
+
+        } catch (error) {
+            //se il codice non è valido o scaduto, resettiamo lo sconto a 0
+            console.error(error);
+            setDiscountPercentage(0);
+
+            //informiamo l'utente
+            alert("Codice sconto non valido o scaduto");
+        }
+    }
+
+    //creo una variabile di stato per i costi di spedizione
+    const [shippingPrice, setShippingPrice] = useState(0);
+
+    //creo una funzione asincrona per calcolare la spedizione in base ai prodotti nel carrello
+    async function fetchShipping(products) {
+        try {
+            //facciamo una chiamata POST al backend alla rotta /calculate-shipping, inviamo i prodotti del carrello come body della richiesta
+            const response = await axios.post(
+                "http://localhost:3000/api/orders/calculate-shipping",
+                { products }
+            );
+
+            //aggiorniamo lo stato della spedizione con il valore calcolato dal backend
+            setShippingPrice(response.data.shippingPrice);
+
+            //restituiamo anche i dati completi calcolati (totale carrello, spedizione, totale finale)
+            return response.data;
+        } catch (error) {
+            //in caso di errore nella chiamata al backend
+            console.error("Errore calcolo spedizione:", error);
+
+            // reset dello stato della spedizione a 0 per sicurezza
+            setShippingPrice(0);
+
+            //restituiamo valori di default per evitare crash nel frontend
+            return { cartTotal: 0, shippingPrice: 0, totalFinal: 0 };
+        }
     }
 
     // //creiamo una funzione per gestire la chiamta axios alla rotta index
@@ -132,7 +203,13 @@ function GlobalProvider({ children }) {
                 billingData,
                 setBillingData,
                 discountCode,
-                setDiscountCode
+                setDiscountCode,
+                discountPercentage,
+                setDiscountPercentage,
+                applyDiscount,
+                shippingPrice,
+                setShippingPrice,
+                fetchShipping
             }}
         >
             {children}

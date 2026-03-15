@@ -8,43 +8,43 @@ function ProductCardDetails({ product }) {
 
 
     return (
+        <main>
+            <div className="product-card">
 
-        <div className="product-card">
+                <div className="product-image">
+                    <img src={product.image} alt={product.name} />
+                </div>
 
-            <div className="product-image">
-                <img src={product.image} alt={product.name} />
-            </div>
+                <div className="product-info">
 
-            <div className="product-info">
+                    <h2 className="product-title">
+                        {product.name}
+                    </h2>
 
-                <h2 className="product-title">
-                    {product.name}
-                </h2>
+                    <div className="product-price">
+                        € {parseFloat(product.price).toFixed(2)}
+                    </div>
 
-                <div className="product-price">
-                    € {parseFloat(product.price).toFixed(2)}
+
+                    <div className="product-weight">
+                        {product.weight} g
+                    </div>
+
+                    <p className="product-description">
+                        {product.descriptions}
+                    </p>
+
+                    <button
+                        onClick={() => addToCart(product)}
+                        className="add-cart">
+                        Aggiungi al carrello
+                    </button>
+
                 </div>
 
 
-                <div className="product-weight">
-                    {product.weight} g
-                </div>
-
-                <p className="product-description">
-                    {product.descriptions}
-                </p>
-
-                <button
-                    onClick={() => addToCart(product)}
-                    className="add-cart">
-                    Aggiungi al carrello
-                </button>
-
             </div>
-
-
-        </div>
-
+        </main>
     )
 }
 

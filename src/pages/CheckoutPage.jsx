@@ -4,10 +4,16 @@ import axios from "axios";
 //import useGlobal
 import { useGlobal } from "../context/GlobalContext";
 
+//import useState 
+import { useState, useEffect } from "react";
+
 function CheckoutPage() {
 
     //importiamo gli elementi che ci servono tramite la useContext
-    const { cart, setCart, shippingData, setShippingData, billingData, setBillingData, discountCode, setDiscountCode } = useGlobal();
+    const { cart, setCart, shippingData, setShippingData, billingData, setBillingData, discountCode, setDiscountCode, discountPercentage, setDiscountPercentage, applyDiscount, fetchShipping, shippingPrice, setShippingPrice } = useGlobal();
+
+    //aggiungiamo una varibile di stato per far combaciare i duen dati di fatturazione
+    const [sameAsShipping, setSameAsShipping] = useState(true);
 
     //creazione varibile endpoint in un salvare l'API
     const endpointCheckout = "http://localhost:3000/api/orders/checkout";
@@ -18,8 +24,9 @@ function CheckoutPage() {
             shippingData,
             billingData,
             products: cart,
-            shipping_price: 5,
-            discount_code: discountCode
+            shipping_price: shippingPrice,
+            discount_code: discountCode,
+            discount_percentage: discountPercentage
         })
             .then(res => {
                 const order = res.data.order;
@@ -29,7 +36,8 @@ function CheckoutPage() {
                 order.products.forEach(p => {
                     message += `- ${p.name} x${p.quantity} (€${p.price})\n`;
                 });
-                message += `\nSpedizione: €${order.shipping_price}\nSconto: €${order.discountAmount}`;
+                message += `\nSpedizione: €${shippingPrice}\nSconto: €${discountAmount.toFixed(2)}`;
+                message += `\nTotale finale: €${totalFinal.toFixed(2)}`;
 
                 //mostriamo alert
                 alert(message);
@@ -39,6 +47,7 @@ function CheckoutPage() {
                 setBillingData({});
                 setDiscountCode("");
                 setCart([]);
+                setDiscountPercentage(0);
             })
             .catch(err => console.error("Errore nella chiamata POST:", err));
     }
@@ -47,7 +56,15 @@ function CheckoutPage() {
     function handleChangeShippingData(e) {
         //prende name e value dall'input
         const { name, value } = e.target;
-        setShippingData({ ...shippingData, [name]: value });
+        //salviamo in una nuova varibile i valori di shippingData
+        const updatedShipping = { ...shippingData, [name]: value };
+        //aggiorniamo shippingData
+        setShippingData(updatedShipping);
+        //se sameAsShipping è vero
+        if (sameAsShipping) {
+            //lo copiamo anche in billing data
+            setBillingData(updatedShipping);
+        }
     }
 
     //creiamo una funzione per generaliziane la presa dei valori dagli input per i dati di fatturazione
@@ -56,6 +73,21 @@ function CheckoutPage() {
         const { name, value } = e.target;
         setBillingData({ ...billingData, [name]: value });
     }
+
+    //creaimo un calcolo di spedizione dinamico
+    useEffect(() => {
+        if (cart.length > 0) {
+            fetchShipping(cart);
+        } else {
+            //se carrello vuoto, resetta spedizione
+            setShippingPrice(0);
+        }
+    }, [cart]);
+
+    //creaimno constanti per i calcoli per il totale carrello, sconto e totale finale
+    const cartTotal = cart.reduce((sum, p) => sum + p.price * p.quantity, 0);
+    const discountAmount = cartTotal * (discountPercentage / 100);
+    const totalFinal = cartTotal - discountAmount + shippingPrice;
 
     return (
         <main>
@@ -139,7 +171,26 @@ function CheckoutPage() {
                         </div>
 
                         <div className="checkout-dates">
-                            <h2>Dati fatturazione</h2>
+                            <div className="cheackout-billing-title">
+                                <h2>Dati fatturazione</h2>
+
+                                <label>
+                                    <input
+                                        type="checkbox"
+                                        checked={sameAsShipping}
+                                        onChange={(e) => {
+                                            const checked = e.target.checked;
+                                            setSameAsShipping(checked);
+
+                                            if (checked) {
+                                                setBillingData(shippingData);
+                                            }
+                                        }}
+                                    />
+                                    Usa gli stessi dati della spedizione
+                                </label>
+                            </div>
+
                             <div className="checkout-input-container">
                                 <input
                                     placeholder="Nome"
@@ -195,13 +246,15 @@ function CheckoutPage() {
                                     name="province"
                                     value={billingData?.province || ""}
                                     onChange={handleChangeBillingData}
-                                    required />
+                                    required
+                                />
                                 <input
                                     placeholder="CAP"
                                     name="postal_code"
                                     value={billingData?.postal_code || ""}
                                     onChange={handleChangeBillingData}
-                                    required />
+                                    required
+                                />
                                 <input
                                     placeholder="Nazione"
                                     name="country"
@@ -217,13 +270,44 @@ function CheckoutPage() {
 
                     <div className="checkout-footer">
 
-                        <div>
-                            <h2>Codice sconto</h2>
-                            <input
-                                placeholder="Inserisci codice sconto"
-                                value={discountCode || ""}
-                                onChange={e => setDiscountCode(e.target.value)} />
+                        <div className="checkout-discount-container">
+                            <div>
+                                <h2>Codice sconto</h2>
+                                <input
+                                    placeholder="Inserisci codice sconto"
+                                    value={discountCode || ""}
+                                    onChange={e => setDiscountCode(e.target.value)}
+                                />
+                                <button
+                                    type="button"
+                                    onClick={applyDiscount}
+                                >
+                                    Applica
+                                </button>
+                                {discountPercentage > 0 && (
+                                    <p>Sconto applicato: {discountPercentage}%</p>
+                                )}
+                            </div>
+                            <div>
+                                <h4>
+                                    Totale carrello: €{cartTotal.toFixed(2)}
+                                </h4>
+                                {discountPercentage > 0 && (
+                                    <h5>
+                                        Sconto applicato: €{discountAmount.toFixed(2)} ({discountPercentage}%)
+                                    </h5>
+                                )}
+                                <h4>
+                                    Spedizione: {shippingPrice === 0 ? "Gratuita" : `€${shippingPrice.toFixed(2)}`}
+                                </h4>
+                                <h3>
+                                    Totale finale: €{totalFinal.toFixed(2)}
+                                </h3>
+                            </div>
                         </div>
+
+
+
                         <div className="checkout-button-container">
                             <button
                                 className="checkout-button"
