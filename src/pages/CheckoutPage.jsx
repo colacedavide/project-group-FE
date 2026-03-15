@@ -5,21 +5,18 @@ import axios from "axios";
 import { useGlobal } from "../context/GlobalContext";
 
 //import useState 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 function CheckoutPage() {
 
     //importiamo gli elementi che ci servono tramite la useContext
-    const { cart, setCart, shippingData, setShippingData, billingData, setBillingData, discountCode, setDiscountCode, discountPercentage, setDiscountPercentage, applyDiscount } = useGlobal();
+    const { cart, setCart, shippingData, setShippingData, billingData, setBillingData, discountCode, setDiscountCode, discountPercentage, setDiscountPercentage, applyDiscount, fetchShipping, shippingPrice, setShippingPrice } = useGlobal();
 
     //aggiungiamo una varibile di stato per far combaciare i duen dati di fatturazione
     const [sameAsShipping, setSameAsShipping] = useState(true);
 
     //creazione varibile endpoint in un salvare l'API
     const endpointCheckout = "http://localhost:3000/api/orders/checkout";
-
-    //creaimo una costante per definire un prezzo di spedizione 
-    const shippingPrice = 5;
 
     //creiamo una funzione per avviare la chiamta POST al click
     function handleCheckout() {
@@ -76,6 +73,16 @@ function CheckoutPage() {
         const { name, value } = e.target;
         setBillingData({ ...billingData, [name]: value });
     }
+
+    //creaimo un calcolo di spedizione dinamico
+    useEffect(() => {
+        if (cart.length > 0) {
+            fetchShipping(cart);
+        } else {
+            //se carrello vuoto, resetta spedizione
+            setShippingPrice(0);
+        }
+    }, [cart]);
 
     //creaimno constanti per i calcoli per il totale carrello, sconto e totale finale
     const cartTotal = cart.reduce((sum, p) => sum + p.price * p.quantity, 0);
@@ -282,12 +289,20 @@ function CheckoutPage() {
                                 )}
                             </div>
                             <div>
-                                <h4>Totale carrello: €{cartTotal.toFixed(2)}</h4>
+                                <h4>
+                                    Totale carrello: €{cartTotal.toFixed(2)}
+                                </h4>
                                 {discountPercentage > 0 && (
-                                    <h5>Sconto applicato: €{discountAmount.toFixed(2)} ({discountPercentage}%)</h5>
+                                    <h5>
+                                        Sconto applicato: €{discountAmount.toFixed(2)} ({discountPercentage}%)
+                                    </h5>
                                 )}
-                                <h4>Spedizione: €{shippingPrice.toFixed(2)}</h4>
-                                <h3>Totale finale: €{totalFinal.toFixed(2)}</h3>
+                                <h4>
+                                    Spedizione: {shippingPrice === 0 ? "Gratuita" : `€${shippingPrice.toFixed(2)}`}
+                                </h4>
+                                <h3>
+                                    Totale finale: €{totalFinal.toFixed(2)}
+                                </h3>
                             </div>
                         </div>
 

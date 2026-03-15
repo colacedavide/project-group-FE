@@ -133,6 +133,35 @@ function GlobalProvider({ children }) {
         }
     }
 
+    //creo una variabile di stato per i costi di spedizione
+    const [shippingPrice, setShippingPrice] = useState(0);
+
+    //creo una funzione asincrona per calcolare la spedizione in base ai prodotti nel carrello
+    async function fetchShipping(products) {
+        try {
+            //facciamo una chiamata POST al backend alla rotta /calculate-shipping, inviamo i prodotti del carrello come body della richiesta
+            const response = await axios.post(
+                "http://localhost:3000/api/orders/calculate-shipping",
+                { products }
+            );
+
+            //aggiorniamo lo stato della spedizione con il valore calcolato dal backend
+            setShippingPrice(response.data.shippingPrice);
+
+            //restituiamo anche i dati completi calcolati (totale carrello, spedizione, totale finale)
+            return response.data;
+        } catch (error) {
+            //in caso di errore nella chiamata al backend
+            console.error("Errore calcolo spedizione:", error);
+
+            // reset dello stato della spedizione a 0 per sicurezza
+            setShippingPrice(0);
+
+            //restituiamo valori di default per evitare crash nel frontend
+            return { cartTotal: 0, shippingPrice: 0, totalFinal: 0 };
+        }
+    }
+
     // //creiamo una funzione per gestire la chiamta axios alla rotta index
     // function fetchRegions() {
 
@@ -177,8 +206,10 @@ function GlobalProvider({ children }) {
                 setDiscountCode,
                 discountPercentage,
                 setDiscountPercentage,
-                applyDiscount
-
+                applyDiscount,
+                shippingPrice,
+                setShippingPrice,
+                fetchShipping
             }}
         >
             {children}
