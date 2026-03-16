@@ -15,6 +15,9 @@ function GlobalProvider({ children }) {
     //creazione varibile endpoint in un salvare l'API
     const endpointIndexProducts = "http://localhost:3000/api/products";
 
+    //creazione varibile endpoint in un salvare l'API
+    const endpointRegions = "http://localhost:3000/api/regions";
+
     //creazione varbile di stato come un array vuoto
     const [products, setProducts] = useState([]);
 
@@ -29,6 +32,24 @@ function GlobalProvider({ children }) {
 
         axios.get(endpointIndexProducts)
             .then(res => { setProducts(res.data.results) })
+            .catch(err => {
+                console.log(err);
+            })
+            //facciamo in modo che a chiamta effettuata la varibile di stato torni false e scompaia il Loader
+            .finally(() => {
+                //metto questi secondi per verificare che funzioni
+                setIsLoading(false)
+            });
+    };
+
+    //creiamo una funzione per gestire la chiamta axios alla rotta index
+    function fetchRegions() {
+
+        //facciamo in modo che all'avvio della chiamata la varibile di stato cambi in true e parta il Loader
+        setIsLoading(true)
+
+        axios.get(endpointRegions)
+            .then(res => { setRegions(res.data) })
             .catch(err => {
                 console.log(err);
             })
@@ -189,33 +210,12 @@ function GlobalProvider({ children }) {
             prev.filter(p => p.id !== id));
     }
 
-    // //creiamo una funzione per gestire la chiamta axios alla rotta index
-    // function fetchRegions() {
-
-    //     //facciamo in modo che all'avvio della chiamata la varibile di stato cambi in true e parta il Loader
-    //     setIsLoading(true)
-
-    //     axios.get(endpointRegions)
-    //         .then(res => { setRegions(res.data) })
-    //         .catch(err => {
-    //             console.log(err);
-    //         })
-    //         //facciamo in modo che a chiamta effettuata la varibile di stato torni false e scompaia il Loader
-    //         .finally(() => {
-    //             //metto questi secondi per verificare che funzioni
-    //             setIsLoading(false)
-    //         });
-    // };
-
-
     return (
         <GlobalContext.Provider
             value={{
                 endpointIndexProducts,
-                // endpointRegions,
-                fetchProducts,
-                // fetchRegions,
-                isLoading,
+                endpointRegions,
+                regions,
                 setIsLoading,
                 products,
                 setProducts,
