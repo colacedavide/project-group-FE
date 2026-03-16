@@ -162,6 +162,33 @@ function GlobalProvider({ children }) {
         }
     }
 
+    //creiamo una varibile di stato per la wishlist
+    const [wishlist, setWishlist] = useState([]);
+
+    //creiamo una funzione per aggiungere i prodotti alla wishlist
+    function addToWishlist(product) {
+
+        //aggiorniamo lo stato di wishlist
+        setWishlist(prev => {
+            //controlliamo se il prodotto è già presnete nella wishlist
+            if (prev.find(p => p.id === product.id)) {
+                //se il prodotto è già presente, rimane tutto invariato
+                return prev;
+            }
+            //altriemnti la aggiungiamo
+            return [...prev, product];
+        });
+    }
+
+    //creiamo una funzione per rimuovere i prodotti alla wishlist
+    function removeFromWishlist(id) {
+
+        //aggiorniamo lo stato di wishlist
+        setWishlist(prev =>
+            //utiliziamo un filter per ircrare l'array senza il prodotto con l'id selezioanto
+            prev.filter(p => p.id !== id));
+    }
+
     // //creiamo una funzione per gestire la chiamta axios alla rotta index
     // function fetchRegions() {
 
@@ -209,7 +236,11 @@ function GlobalProvider({ children }) {
                 applyDiscount,
                 shippingPrice,
                 setShippingPrice,
-                fetchShipping
+                fetchShipping,
+                wishlist,
+                setWishlist,
+                addToWishlist,
+                removeFromWishlist
             }}
         >
             {children}

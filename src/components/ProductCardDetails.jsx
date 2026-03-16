@@ -1,10 +1,13 @@
 //import useGlobal
 import { useGlobal } from "../context/GlobalContext";
 
+//import Link 
+import { Link } from "react-router-dom"
+
 function ProductCardDetails({ product }) {
 
     //importiamo gli elementi che ci servono tramite la useContext
-    const { addToCart } = useGlobal();
+    const { addToCart, addToWishlist } = useGlobal();
 
 
     return (
@@ -34,11 +37,26 @@ function ProductCardDetails({ product }) {
                         {product.descriptions}
                     </p>
 
-                    <button
-                        onClick={() => addToCart(product)}
-                        className="add-cart">
-                        Aggiungi al carrello
-                    </button>
+                    <div className="product-button-container">
+                        <button
+                            onClick={() => addToCart(product)}
+                            className="add-cart">
+                            Aggiungi al carrello
+                        </button>
+
+                        <button
+                            className="add-wishlist-button"
+                            onClick={() => addToWishlist(product)}>
+                            Aggiungi alla lista desideri
+                        </button>
+                    </div>
+                    <div className="back-to-home-button-container">
+                        <Link
+                            className="back-to-home-button"
+                            to="/">
+                            Torna alla Home
+                        </Link>
+                    </div>
 
                 </div>
 

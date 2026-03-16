@@ -22,19 +22,22 @@ function MainHeader() {
                         Regioni
                     </NavLink>
                 </li>
+                <li>
+                    <NavLink
+                        className="header-link"
+                        to={"/wishlist"}>
+                        Lista dei desideri
+                    </NavLink>
+                </li>
+                <li>
+                    <NavLink
+                        className="header-link"
+                        to={"/cart"}>
+                        Carello
+                    </NavLink>
+                </li>
             </ul>
-            <div className="cart-link-contrainer">
-                <NavLink
-                    className="cart-link"
-                    to={"/wishlist"}>
-                    Lista dei desideri
-                </NavLink>
-                <NavLink
-                    className="cart-link"
-                    to={"/cart"}>
-                    Carello
-                </NavLink>
-            </div>
+
             <SearchBar />
         </header>
     )

@@ -82,14 +82,6 @@ function ProductPage() {
         <main>
             {product && <ProductCardDetails product={product} />}
 
-            <div className="back-to-home-button-container">
-                <Link
-                    className="back-to-home-button"
-                    to="/">
-                    Torna alla Home
-                </Link>
-            </div>
-
             {relatedProducts.length > 0 && (
                 <>
                     <h2
