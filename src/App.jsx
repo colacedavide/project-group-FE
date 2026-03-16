@@ -8,15 +8,19 @@ import { GlobalProvider } from "./context/GlobalContext"
 import DefaultLayout from "./layouts/DefaultLayout"
 //import NotFound Page
 import NotFound from "./pages/NotFound"
-//import HomePage, ProductPage, RegionPage e RegionProductPage 
+//import HomePage, ProductPage, RegionPage e RegionProductPage, importo searchpage
 import HomePage from "./pages/HomePage"
 import ProductPage from "./pages/ProductPage"
 import RegionPage from "./pages/RegionPage"
 import RegionProductPage from "./pages/RegionProductPage"
+<<<<<<< HEAD
 //import CartPage, CheckoutPage e WhislistPage
 import CartPage from "./pages/CartPage"
 import CheckoutPage from "./pages/CheckoutPage"
 import WishlistPage from "./pages/WishlistPage"
+=======
+import SearchPage from "./pages/SearchPage"
+>>>>>>> seachFeature
 
 function App() {
 
@@ -28,10 +32,15 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/product/:id" element={<ProductPage />} />
             <Route path="/region/" element={<RegionPage />} />
+<<<<<<< HEAD
             <Route path="/region/:name/products" element={<RegionProductPage />} />
             <Route path="/cart/" element={<CartPage />} />
             <Route path="/checkout/" element={<CheckoutPage />} />
             <Route path="/wishlist/" element={<WishlistPage />} />
+=======
+            <Route path="/region/:name" element={<RegionProductPage />} />
+            <Route path="/search" element={<SearchPage />} />
+>>>>>>> seachFeature
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>

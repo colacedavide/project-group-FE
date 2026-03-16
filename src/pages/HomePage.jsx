@@ -147,15 +147,20 @@ function HomePage() {
                 <HeroSection />
             </div>
 
-            <select value={selected} onChange={handleChange}>
+            {/*<select value={selected} onChange={handleChange}>
                 <option value="">-- Seleziona una regione --</option>
                 {regions?.map((region) => (
                     <option key={region.id} value={region.name}>
                         {region.name}
                     </option>
+<<<<<<< HEAD
                 ))
                 }
             </select >
+=======
+                ))}
+            </select>*/}
+>>>>>>> seachFeature
 
             {selected === "" ? (
                 <>

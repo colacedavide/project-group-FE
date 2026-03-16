@@ -28,7 +28,7 @@ function GlobalProvider({ children }) {
         setIsLoading(true)
 
         axios.get(endpointIndexProducts)
-            .then(res => { setProducts(res.data) })
+            .then(res => { setProducts(res.data.results) })
             .catch(err => {
                 console.log(err);
             })

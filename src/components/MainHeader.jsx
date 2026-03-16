@@ -1,5 +1,7 @@
 //import NavLink
 import { NavLink } from "react-router-dom"
+//importo searchBar
+import SearchBar from "./SearchBar"
 
 function MainHeader() {
 
@@ -21,6 +23,7 @@ function MainHeader() {
                     </NavLink>
                 </li>
             </ul>
+<<<<<<< HEAD
             <div className="cart-link-contrainer">
                 <NavLink
                     className="cart-link"
@@ -33,6 +36,9 @@ function MainHeader() {
                     Carello
                 </NavLink>
             </div>
+=======
+            <SearchBar />
+>>>>>>> seachFeature
         </header>
     )
 }
