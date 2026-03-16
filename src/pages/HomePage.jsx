@@ -153,14 +153,8 @@ function HomePage() {
                     <option key={region.id} value={region.name}>
                         {region.name}
                     </option>
-<<<<<<< HEAD
-                ))
-                }
-            </select >
-=======
                 ))}
             </select>*/}
->>>>>>> seachFeature
 
             {selected === "" ? (
                 <>
