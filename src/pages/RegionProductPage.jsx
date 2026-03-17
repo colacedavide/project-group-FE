@@ -78,7 +78,7 @@ function RegionProductPage() {
     return (
         <main>
 
-            <h2 className="home-subtitle">Tavola imbandita</h2>
+            <h2 className="home-subtitle">Prodotti della regione: {decodeURIComponent(name)}</h2>
             <div className="home-container">
                 {products
                     //mescola l'array
@@ -92,9 +92,15 @@ function RegionProductPage() {
                         )
                     })}
             </div>
-            <Link to="/">Torna alla home</Link>
-            <br />
-            <Link to="/region">Torna alla pagina delle regioni</Link>
+            <div className="region-navigation">
+                <Link className="nav-button" to="/">
+                    Torna alla Home
+                </Link>
+
+                <Link className="nav-button secondary" to="/region">
+                    Torna alle Regioni
+                </Link>
+            </div>
         </main>
     )
 }
