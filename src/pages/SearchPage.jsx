@@ -11,7 +11,7 @@ import { useGlobal } from "../context/GlobalContext";
 
 function SearchPage() {
 
-    const [searchParams] = useSearchParams();
+    const [searchParams, setSearchParams] = useSearchParams();
     const searched = searchParams.get("query");
     //var di stato per salvare prodotti cercati dal db
     const [searchedItems, setSearchedItems] = useState([]);
@@ -22,11 +22,26 @@ function SearchPage() {
     //var di stato per salvare le categorie che arrivano da db
     const [categories, setCategories] = useState([])
     //var di stato che gestisce al select dell'utente
-    const [selectedCategory, setSelectedCategory] = useState("")
+    const [selectedCategory, setSelectedCategory] = useState(searchParams.get("category") || "")
     //var di stato che salva regioni che arrivano dal db
     const [regions, setRegions] = useState([])
-    //var di stato che gestisce select utente
-    const [selectedRegion, setSelectedRegions] = useState("")
+    //var di stato che gestisce select untente
+    const [selectedRegion, setSelectedRegion] = useState(searchParams.get("region") || "")
+
+    const updateFilters = (key, value) => {
+        //creo copia parametri persenti nell url
+        const newParams = new URLSearchParams(searchParams);
+
+        // se il valore eieste lo aggiungo o aggiorno la chiave, altrimenti la rimuovo
+        if (value) {
+            newParams.set(key, value); // aggiungo o aggirno la coppia chiave valore
+        } else {
+            newParams.delete(key); // se la chiave é vuota perche ha scelto "tutte", cancello la chiave
+        }
+
+        // il broswer aggiorna url
+        setSearchParams(newParams);
+    };
 
     //importiamo getProductPricing per gestire eventuali sconti
     const { getProductPricing } = useGlobal();
@@ -76,7 +91,17 @@ function SearchPage() {
             });
     }, [searched, selectedCategory, selectedRegion]);
 
+<<<<<<< HEAD
     //se isLoading è true gestisci il caricamento
+=======
+    // Ogni volta che l'URL cambia, aggiorniamo i nostri stati locali
+    useEffect(() => {
+        setSelectedCategory(searchParams.get("category") || "");
+        setSelectedRegion(searchParams.get("region") || "");
+    }, [searchParams]); // Ascolta i cambiamenti dell'URL
+
+    //se is loading é true gestisci il caricamento
+>>>>>>> searchUrl
     if (isLoading) {
         return (
             <div className="loader-container">
@@ -92,7 +117,7 @@ function SearchPage() {
             <div className="filter-section">
                 <label>Categoria: </label>
                 <select value={selectedCategory}
-                    onChange={(e) => setSelectedCategory(e.target.value)}>
+                    onChange={(e) => updateFilters("category", e.target.value)}>
                     <option value="">Tutte le categorie</option>
                     {categories.map(c => (
                         <option key={c.id} value={c.name}>{c.name}</option>
@@ -104,7 +129,7 @@ function SearchPage() {
             <div className="filter-region">
                 <label>Regione: </label>
                 <select value={selectedRegion}
-                    onChange={(e) => setSelectedRegions(e.target.value)}>
+                    onChange={(e) => updateFilters("region", e.target.value)}>
                     <option value="">Tutte le regioni</option>
                     {regions.map(r => (
                         <option key={r.id} value={r.name}>{r.name}</option>
