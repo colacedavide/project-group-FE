@@ -12,6 +12,7 @@ function SearchBar() {
     const handleSubmit = (e) => {
         e.preventDefault(); //fermo il broswer dal ricaricare la pagina
         navigate(`/search?query=${searched}`); //usenavigate mi porta sulla rotta search e aggiunge la var di stato searched
+        setSearched(""); //svuoto la var di stato per pulire il campo di input dopo la ricerca
     }
 
     return (

@@ -12,7 +12,8 @@ import { useGlobal } from "../context/GlobalContext";
 function SearchPage() {
 
     const [searchParams, setSearchParams] = useSearchParams();
-    const searched = searchParams.get("query");
+
+    const [searched, setSearched] = useState(searchParams.get("query"));
     //var di stato per salvare prodotti cercati dal db
     const [searchedItems, setSearchedItems] = useState([]);
     //var di stato per caricameto chiamata axios
@@ -32,15 +33,21 @@ function SearchPage() {
         //creo copia parametri persenti nell url
         const newParams = new URLSearchParams(searchParams);
 
-        // se il valore eieste lo aggiungo o aggiorno la chiave, altrimenti la rimuovo
-        if (value) {
-            newParams.set(key, value); // aggiungo o aggirno la coppia chiave valore
-        } else {
-            newParams.delete(key); // se la chiave é vuota perche ha scelto "tutte", cancello la chiave
-        }
+        if (key === "category" || key === "region") {
+            newParams.delete("query"); // rimuovo la query di ricerca quando cambio categoria o regione
 
-        // il broswer aggiorna url
-        setSearchParams(newParams);
+            // se il valore eieste lo aggiungo o aggiorno la chiave, altrimenti la rimuovo
+            if (value) {
+                newParams.set(key, value); // aggiungo o aggirno la coppia chiave valore
+            } else {
+                newParams.delete(key); // se la chiave é vuota perche ha scelto "tutte", cancello la chiave
+            }
+
+            // il broswer aggiorna url
+            setSearchParams(newParams);
+            // cambio searched e lo faccio tornare vuoto 
+            setSearched("");
+        }
     };
 
     //importiamo getProductPricing per gestire eventuali sconti
@@ -105,6 +112,7 @@ function SearchPage() {
             </div>
         );
     }
+
 
     return (
         <main>
