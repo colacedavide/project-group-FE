@@ -91,9 +91,6 @@ function SearchPage() {
             });
     }, [searched, selectedCategory, selectedRegion]);
 
-<<<<<<< HEAD
-    //se isLoading è true gestisci il caricamento
-=======
     // Ogni volta che l'URL cambia, aggiorniamo i nostri stati locali
     useEffect(() => {
         setSelectedCategory(searchParams.get("category") || "");
@@ -101,7 +98,6 @@ function SearchPage() {
     }, [searchParams]); // Ascolta i cambiamenti dell'URL
 
     //se is loading é true gestisci il caricamento
->>>>>>> searchUrl
     if (isLoading) {
         return (
             <div className="loader-container">
