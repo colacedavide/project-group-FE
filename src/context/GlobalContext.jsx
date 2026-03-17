@@ -24,6 +24,15 @@ function GlobalProvider({ children }) {
     //creazione varbile di stato come un array vuoto
     const [regions, setRegions] = useState([]);
 
+    //creaimo una funzione per la gestione del prezzo e dello sconto
+    function getProductPricing(product) {
+        const discount = product.discount_percentage ?? 0;
+        const isOnSale = discount > 0;
+        const price = product.price ?? 0;
+        const finalPrice = product.final_price ?? price;
+        return { price, finalPrice, discount, isOnSale };
+    }
+
     //creiamo una funzione per gestire la chiamta axios alla rotta index
     function fetchProducts() {
 
@@ -215,7 +224,6 @@ function GlobalProvider({ children }) {
             value={{
                 endpointIndexProducts,
                 endpointRegions,
-                regions,
                 fetchRegions,
                 setIsLoading,
                 fetchProducts,
@@ -242,7 +250,8 @@ function GlobalProvider({ children }) {
                 wishlist,
                 setWishlist,
                 addToWishlist,
-                removeFromWishlist
+                removeFromWishlist,
+                getProductPricing
             }}
         >
             {children}

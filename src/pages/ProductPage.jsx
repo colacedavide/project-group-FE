@@ -17,7 +17,7 @@ import ProductCardDetails from "../components/ProductCardDetails";
 function ProductPage() {
 
     //importiamo gli elementi che ci servono tramite la useContext
-    const { setIsLoading, endpointIndexProducts } = useGlobal();
+    const { setIsLoading, endpointIndexProducts, getProductPricing } = useGlobal();
 
     //ricaviamo l'id dall'url di rotta
     const { id } = useParams();
@@ -89,25 +89,43 @@ function ProductPage() {
                     >Prodotti correlati</h2>
 
                     <div className="related-products">
-                        {relatedProducts.map(p => (
-                            <div key={p.id} className="related-card">
-                                <Link
-                                    className="related-card-link"
-                                    to={`/product/${p.slug}`}>
-                                    <div className="related-card-title-container">
-                                        <h4>{p.price}€/{p.weight}g </h4>
-                                        <h4
-                                            className="related-card-title"
-                                        > {p.name} </h4>
-                                    </div>
-                                    <div className="related-card-img-container">
-                                        <img
-                                            className="related-card-img"
-                                            src={p.image} alt={p.name} />
-                                    </div>
-                                </Link>
-                            </div>
-                        ))}
+                        {relatedProducts.map(p => {
+                            // calcoliamo i prezzi aggiornati con eventuali sconti
+                            const { price, finalPrice, discount, isOnSale } = getProductPricing(p);
+
+                            return (
+                                <div key={p.id} className="related-card">
+                                    <Link
+                                        className="related-card-link"
+                                        to={`/product/${p.slug}`}>
+                                        <div className="related-card-title-container">
+                                            {isOnSale ? (
+                                                // se c'è sconto, mostriamo prezzo originale barrato e prezzo scontato
+                                                <h4>
+                                                    <span style={{ textDecoration: 'line-through', color: '#999' }}>
+                                                        €{price.toFixed(2)}
+                                                    </span>{' '}
+                                                    <span style={{ color: 'red' }}>
+                                                        €{finalPrice.toFixed(2)}
+                                                    </span> / {p.weight}g
+                                                </h4>
+                                            ) : (
+                                                // altrimenti mostriamo solo il prezzo normale
+                                                <h4>€{price.toFixed(2)} / {p.weight}g</h4>
+                                            )}
+                                            <h4
+                                                className="related-card-title"
+                                            > {p.name} </h4>
+                                        </div>
+                                        <div className="related-card-img-container">
+                                            <img
+                                                className="related-card-img"
+                                                src={p.image} alt={p.name} />
+                                        </div>
+                                    </Link>
+                                </div>
+                            )
+                        })}
                     </div>
                 </>
             )}

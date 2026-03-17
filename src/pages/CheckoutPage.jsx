@@ -10,7 +10,7 @@ import { useState, useEffect } from "react";
 function CheckoutPage() {
 
     //importiamo gli elementi che ci servono tramite la useContext
-    const { cart, setCart, shippingData, setShippingData, billingData, setBillingData, discountCode, setDiscountCode, discountPercentage, setDiscountPercentage, applyDiscount, fetchShipping, shippingPrice, setShippingPrice } = useGlobal();
+    const { cart, setCart, shippingData, setShippingData, billingData, setBillingData, discountCode, setDiscountCode, discountPercentage, setDiscountPercentage, applyDiscount, fetchShipping, shippingPrice, setShippingPrice, getProductPricing } = useGlobal();
 
     //aggiungiamo una varibile di stato per far combaciare i duen dati di fatturazione
     const [sameAsShipping, setSameAsShipping] = useState(true);
@@ -31,12 +31,29 @@ function CheckoutPage() {
             .then(res => {
                 const order = res.data.order;
 
-                //prepariamo messaggio alert
-                let message = `Ordine confermato!\nID: ${order.id}\nTotale: €${order.totalAmount}\n\nProdotti:\n`;
+                //ricostruiamo il totale con i prezzi aggiornati
+                let cartTotal = 0;
+                let message = `Ordine confermato!\nID: ${order.id}\n\nProdotti:\n`;
+
+                //aggiorniamo i prezzi con getProductPricing
                 order.products.forEach(p => {
-                    message += `- ${p.name} x${p.quantity} (€${p.price})\n`;
+                    const { price, finalPrice, discount, isOnSale } = getProductPricing(p);
+                    cartTotal += finalPrice * p.quantity;
+
+                    if (isOnSale) {
+                        message += `- ${p.name} x${p.quantity} (€${price.toFixed(2)} -> scontato €${finalPrice.toFixed(2)})\n`;
+                    } else {
+                        message += `- ${p.name} x${p.quantity} (€${price.toFixed(2)})\n`;
+                    }
                 });
-                message += `\nSpedizione: €${shippingPrice}\nSconto: €${discountAmount.toFixed(2)}`;
+
+                //calcoliamo sconto e totale finale
+                const discountAmount = cartTotal * (discountPercentage / 100);
+                const totalFinal = cartTotal - discountAmount + shippingPrice;
+
+                //aggiungiamo spedizione, sconto e totale finale al messaggio
+                message += `\nSpedizione: €${shippingPrice.toFixed(2)}`;
+                message += `\nSconto: €${discountAmount.toFixed(2)}`;
                 message += `\nTotale finale: €${totalFinal.toFixed(2)}`;
 
                 //mostriamo alert
@@ -85,7 +102,10 @@ function CheckoutPage() {
     }, [cart]);
 
     //creaimno constanti per i calcoli per il totale carrello, sconto e totale finale
-    const cartTotal = cart.reduce((sum, p) => sum + p.price * p.quantity, 0);
+    const cartTotal = cart.reduce((sum, p) => {
+        const { finalPrice } = getProductPricing(p);
+        return sum + finalPrice * p.quantity;
+    }, 0);
     const discountAmount = cartTotal * (discountPercentage / 100);
     const totalFinal = cartTotal - discountAmount + shippingPrice;
 

@@ -10,6 +10,9 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 //import axios
 import axios from "axios";
 
+//import ProductCard
+import ProductCard from "../components/ProductCard";
+
 function RegionProductPage() {
 
     //importiamo gli elementi che ci servono tramite la useContext
@@ -34,7 +37,26 @@ function RegionProductPage() {
         setIsLoading(true)
 
         axios.get(endpoint)
-            .then(res => { setProducts(res.data) })
+            .then(res => {
+                const normalizedProducts = res.data.map(p => {
+                    let img = p.image;
+
+                    if (img) {
+                        // Se è relativo, aggiungi il dominio
+                        if (!img.startsWith('http')) {
+                            img = img.startsWith('/') ? img.slice(1) : img;
+                            img = `http://localhost:3000/${img}`;
+                        }
+
+                        // Sostituisci regions-images con product-images
+                        img = img.replace('/images/regions-images/', '/images/product-images/');
+                    }
+
+                    return { ...p, image: img };
+                });
+
+                setProducts(normalizedProducts);
+            })
             .catch(err => {
                 console.log(err);
                 if (err.response && err.response.status === 404) {
@@ -63,24 +85,10 @@ function RegionProductPage() {
                     .sort(() => Math.random() - 0.5)
                     .map(product => {
                         return (
-                            <div
-                                className="card-container"
-                                key={product.id}>
-                                <div className="img-container">
-                                    <img
-                                        className="card-image"
-                                        src={product.image.replace('regions-images', 'product-images')}
-                                        alt={product.name}
-                                    />
-                                </div>
-                                <div className="text-container">
-                                    <Link className="card-link" to={`/product/${product.slug}`}>
-                                        {product.name}
-                                    </Link>
-                                    <div>{product.weight} g</div>
-                                    <div className="card-price"> prezo: {product.price} &euro; </div>
-                                </div>
-                            </div>
+                            <ProductCard
+                                key={product.id}
+                                product={product}
+                            />
                         )
                     })}
             </div>

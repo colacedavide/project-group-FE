@@ -10,10 +10,13 @@ import { useEffect } from "react";
 function CartPage() {
 
     //importiamo gli elementi che ci servono dal contesto globale
-    const { cart, removeFromCart, addToCart, shippingPrice, fetchShipping } = useGlobal();
+    const { cart, removeFromCart, addToCart, shippingPrice, fetchShipping, getProductPricing } = useGlobal();
 
-    //calcoliamo il totale carrello dinamicamente
-    const cartTotal = cart.reduce((sum, p) => sum + p.price * p.quantity, 0);
+    // calcoliamo il totale usando il prezzo finale
+    const cartTotal = cart.reduce((sum, p) => {
+        const { finalPrice } = getProductPricing(p);
+        return sum + finalPrice * p.quantity;
+    }, 0);
 
     //effetto per calcolare la spedizione ogni volta che il carrello cambia
     useEffect(() => {
@@ -33,30 +36,35 @@ function CartPage() {
                 <div className="cart-products-container">
                     {cart.length === 0 && <p>Il carrello è vuoto.</p>}
 
-                    {cart.map(product => (
-                        <div
-                            className="cart-product"
-                            key={product.id} >
-                            <h3>{product.name}</h3>
-                            <div className="cart-product-container">
-                                <div className="cart-product-container-element">
-                                    <img src={product.image} alt={product.name} className="cart-img" />
-                                </div>
-                                <div className="cart-product-container-element">
-                                    <p className="cart-product-description">Quantità: {product.quantity}</p>
-                                    <p className="cart-product-description">Prezzo unitario: {product.price.toFixed(2)} €</p>
-                                </div>
-                                <div className="cart-button-container">
-                                    <button
-                                        className="cart-add-remove-button"
-                                        onClick={() => addToCart(product)}>Aggiungi</button>
-                                    <button
-                                        className="cart-add-remove-button"
-                                        onClick={() => removeFromCart(product.id)}>Rimuovi</button>
+                    {cart.map(product => {
+                        const { finalPrice, price, discount, isOnSale } = getProductPricing(product);
+
+                        return (
+                            <div className="cart-product" key={product.id}>
+                                <h3>{product.name}</h3>
+                                <div className="cart-product-container">
+                                    <div className="cart-product-container-element">
+                                        <img src={product.image} alt={product.name} className="cart-img" />
+                                    </div>
+                                    <div className="cart-product-container-element">
+                                        <p>Quantità: {product.quantity}</p>
+                                        {isOnSale ? (
+                                            <p>
+                                                Prezzo unitario: <span style={{ textDecoration: "line-through" }}>{price.toFixed(2)} €</span>{" "}
+                                                <span style={{ color: "red" }}>{finalPrice.toFixed(2)} €</span>
+                                            </p>
+                                        ) : (
+                                            <p>Prezzo unitario: {price.toFixed(2)} €</p>
+                                        )}
+                                    </div>
+                                    <div className="cart-button-container">
+                                        <button onClick={() => addToCart(product)}>Aggiungi</button>
+                                        <button onClick={() => removeFromCart(product.id)}>Rimuovi</button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    ))}
+                        );
+                    })}
                 </div>
                 <div className="cart-price-container">
                     <div className="cart-price-border">

@@ -7,8 +7,10 @@ import { Link } from "react-router-dom"
 function ProductCardDetails({ product }) {
 
     //importiamo gli elementi che ci servono tramite la useContext
-    const { addToCart, addToWishlist } = useGlobal();
+    const { addToCart, addToWishlist, getProductPricing } = useGlobal();
 
+    //calcoliamo i prezzi aggiornati con eventuale sconto
+    const { price, finalPrice, discount, isOnSale } = getProductPricing(product);
 
     return (
         <main>
@@ -25,9 +27,21 @@ function ProductCardDetails({ product }) {
                     </h2>
 
                     <div className="product-price">
-                        € {parseFloat(product.price).toFixed(2)}
+                        {isOnSale ? (
+                            // se c'è sconto, mostriamo prezzo originale barrato e prezzo scontato
+                            <>
+                                <span style={{ textDecoration: 'line-through', color: '#999' }}>
+                                    €{price.toFixed(2)}
+                                </span>{' '}
+                                <span style={{ color: 'red' }}>
+                                    €{finalPrice.toFixed(2)}
+                                </span>
+                            </>
+                        ) : (
+                            // altrimenti mostriamo solo il prezzo normale
+                            <>€{price.toFixed(2)}</>
+                        )}
                     </div>
-
 
                     <div className="product-weight">
                         {product.weight} g
