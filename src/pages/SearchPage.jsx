@@ -8,8 +8,14 @@ import { useSearchParams } from "react-router-dom";
 import axios from "axios";
 //import useGlobal
 import { useGlobal } from "../context/GlobalContext";
+//import react icons
+import { FaHeart } from "react-icons/fa";
+import { FaCartPlus } from "react-icons/fa";
 
 function SearchPage() {
+
+    //importiamo gli elementi che ci servono dal contesto globale
+    const { onlyDiscounted, addToCart, addToWishlist } = useGlobal();
 
     const [searchParams, setSearchParams] = useSearchParams();
 
@@ -28,26 +34,28 @@ function SearchPage() {
     const [regions, setRegions] = useState([])
     //var di stato che gestisce select untente
     const [selectedRegion, setSelectedRegion] = useState(searchParams.get("region") || "")
+    // stato per ordinamento
+    const [sort, setSort] = useState(searchParams.get("sort") || "");
 
     const updateFilters = (key, value) => {
-        //creo copia parametri persenti nell url
+        // copia dei parametri attuali
         const newParams = new URLSearchParams(searchParams);
 
+        // se c'è valore → set
+        if (value) {
+            newParams.set(key, value);
+        } else {
+            newParams.delete(key);
+        }
+
+        // logica speciale SOLO per category e region
         if (key === "category" || key === "region") {
-            newParams.delete("query"); // rimuovo la query di ricerca quando cambio categoria o regione
-
-            // se il valore eieste lo aggiungo o aggiorno la chiave, altrimenti la rimuovo
-            if (value) {
-                newParams.set(key, value); // aggiungo o aggirno la coppia chiave valore
-            } else {
-                newParams.delete(key); // se la chiave é vuota perche ha scelto "tutte", cancello la chiave
-            }
-
-            // il broswer aggiorna url
-            setSearchParams(newParams);
-            // cambio searched e lo faccio tornare vuoto 
+            newParams.delete("query"); // reset ricerca
             setSearched("");
         }
+
+        // aggiorna URL
+        setSearchParams(newParams);
     };
 
     //importiamo getProductPricing per gestire eventuali sconti
@@ -84,9 +92,15 @@ function SearchPage() {
     //chiamata axios per popolare array parola cercata al primo montaggio componente con useEffect
     useEffect(() => {
         setIsLoading(true);
-        //salvo endpoint dentro una costante
-        const endpoint = `http://localhost:3000/api/products?search=${searched}&category=${selectedCategory}&region=${selectedRegion}` //uso backtick per inserire var "searched" dentro la stringa
-        //chiamata axios
+
+        let endpoint = `http://localhost:3000/api/products?search=${searched}&category=${selectedCategory}&region=${selectedRegion}&sort=${sort}`;
+
+        // cambio endpoint se filtro attivo
+        if (onlyDiscounted) {
+            endpoint = `http://localhost:3000/api/products/discounted?search=${searched}&category=${selectedCategory}&region=${selectedRegion}&sort=${sort}`;
+        }
+
+        //chiamata SEMPRE eseguita
         axios.get(endpoint)
             .then((res) => {
                 setSearchedItems(res.data.results);
@@ -96,12 +110,15 @@ function SearchPage() {
                 console.log(err);
                 setIsLoading(false);
             });
-    }, [searched, selectedCategory, selectedRegion]);
+
+    }, [searched, selectedCategory, selectedRegion, onlyDiscounted, sort]);
 
     // Ogni volta che l'URL cambia, aggiorniamo i nostri stati locali
     useEffect(() => {
         setSelectedCategory(searchParams.get("category") || "");
         setSelectedRegion(searchParams.get("region") || "");
+        setSearched(searchParams.get("query") || "");
+        setSort(searchParams.get("sort") || "");
     }, [searchParams]); // Ascolta i cambiamenti dell'URL
 
     //se is loading é true gestisci il caricamento
@@ -117,35 +134,55 @@ function SearchPage() {
     return (
         <main>
 
-            {/* select categoria */}
-            <div className="filter-section">
-                <label>Categoria: </label>
-                <select value={selectedCategory}
-                    onChange={(e) => updateFilters("category", e.target.value)}>
-                    <option value="">Tutte le categorie</option>
-                    {categories.map(c => (
-                        <option key={c.id} value={c.name}>{c.name}</option>
-                    ))}
-                </select>
-            </div>
+            <div className="selcet-container">
+                <div className="filter-section">
+                    <label>Categoria: </label>
+                    <select value={selectedCategory}
+                        onChange={(e) => updateFilters("category", e.target.value)}>
+                        <option value="">Tutte le categorie</option>
+                        {categories.map(c => (
+                            <option key={c.id} value={c.name}>{c.name}</option>
+                        ))}
+                    </select>
+                </div>
 
-            {/* select regioni */}
-            <div className="filter-region">
-                <label>Regione: </label>
-                <select value={selectedRegion}
-                    onChange={(e) => updateFilters("region", e.target.value)}>
-                    <option value="">Tutte le regioni</option>
-                    {regions.map(r => (
-                        <option key={r.id} value={r.name}>{r.name}</option>
-                    ))}
-                </select>
-            </div>
+                {/* select regioni */}
+                <div className="filter-region">
+                    <label>Regione: </label>
+                    <select value={selectedRegion}
+                        onChange={(e) => updateFilters("region", e.target.value)}>
+                        <option value="">Tutte le regioni</option>
+                        {regions.map(r => (
+                            <option key={r.id} value={r.name}>{r.name}</option>
+                        ))}
+                    </select>
+                </div>
 
+                <div className="filter-sort">
+                    <label>Ordina per: </label>
+                    <select
+                        value={sort}
+                        onChange={(e) => updateFilters("sort", e.target.value)}
+                    >
+                        <option value="">Default</option>
+                        <option value="name_asc">Nome A-Z</option>
+                        <option value="name_desc">Nome Z-A</option>
+                        <option value="price_asc">Prezzo crescente</option>
+                        <option value="price_desc">Prezzo decrescente</option>
+                    </select>
+                </div>
+            </div>
             {searchedItems.length > 0 ? (
                 <div>
-                    <h2>Risultati per: {searched}</h2>
-                    <button onClick={() => { setIsGridActive(true) }}>Vista Griglia</button>
-                    <button onClick={() => { setIsGridActive(false) }}>Vista Lista</button>
+                    <div className="search-button-container">
+                        <h2>Risultati per: {searched}</h2>
+                        <button
+                            className="search-button-search"
+                            onClick={() => setIsGridActive(prev => !prev)}
+                        >
+                            {isGridActive ? "Vista Lista" : "Vista Griglia"}
+                        </button>
+                    </div>
                     <div className={isGridActive ? "home-container" : "list-layout"}>
                         {searchedItems.map(item => {
                             //calcolo prezzi con getProductPricing
@@ -153,17 +190,40 @@ function SearchPage() {
                             return (
                                 <div className={isGridActive ? "card-container" : "list-item"}
                                     key={item.id}>
-                                    {/* operatore logico && per mostrare immagine solo se isGridActive è true */}
-                                    {isGridActive && (
-                                        <div className="img-container">
-                                            <img className="card-image" src={item.image} alt={item.name} />
-                                        </div>
+
+
+                                    <div className="img-container">
+                                        <img className="card-image" src={item.image} alt={item.name} />
+                                    </div>
+                                    {isGridActive || (
+                                        <p
+                                            className="description-container"
+                                        >{item.descriptions}</p>
                                     )}
                                     <div className="text-container">
                                         <Link className="card-link" to={`/product/${item.slug}`}>
                                             {item.name}
                                         </Link>
-                                        <div>{item.weight} g</div>
+                                        <div className="card-weight-button-container">
+                                            <div
+                                                className="card-weight">
+                                                {item.weight} g
+                                            </div>
+                                            <div className="card-button-container">
+                                                <button
+                                                    className="card-button"
+                                                    onClick={() => addToCart(item)}>
+                                                    <FaCartPlus />
+                                                </button>
+
+                                                <button
+                                                    className="card-button"
+                                                    onClick={() => addToWishlist(item)}>
+                                                    <FaHeart />
+                                                </button>
+                                            </div>
+
+                                        </div>
                                         <div className="card-price">
                                             Prezzo: {isOnSale ? (
                                                 <>
@@ -184,7 +244,7 @@ function SearchPage() {
                         })}
                     </div>
                 </div>
-            ) : (<p>Nessun prodotto trovato per "{searched}"</p>)}
+            ) : (<p>Nessun prodotto trovato </p>)}
 
         </main>
     )

@@ -78,8 +78,8 @@ function RegionProductPage() {
     return (
         <main>
 
-            <h2 className="home-subtitle">Prodotti della regione: {decodeURIComponent(name)}</h2>
-            <div className="home-container">
+            <h2 className="region-product-subtitle">Prodotti della regione: {decodeURIComponent(name)}</h2>
+            <div className="region-product-container">
                 {products
                     //mescola l'array
                     .sort(() => Math.random() - 0.5)

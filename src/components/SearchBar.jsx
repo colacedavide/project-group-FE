@@ -22,7 +22,9 @@ function SearchBar() {
                 type="text"
                 value={searched}
                 onChange={(e) => setSearched(e.target.value)} />
-            <button>cerca</button>
+            <button
+                className="search-button">
+                cerca</button>
         </form>
     )
 }

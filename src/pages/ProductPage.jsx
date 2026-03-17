@@ -13,11 +13,15 @@ import { Link, useParams, useNavigate } from "react-router-dom"
 // import del component card prodotto
 import ProductCardDetails from "../components/ProductCardDetails";
 
+//import react icons
+import { FaHeart } from "react-icons/fa";
+import { FaCartPlus } from "react-icons/fa";
+
 
 function ProductPage() {
 
     //importiamo gli elementi che ci servono tramite la useContext
-    const { setIsLoading, endpointIndexProducts, getProductPricing } = useGlobal();
+    const { setIsLoading, endpointIndexProducts, getProductPricing, addToCart, addToWishlist } = useGlobal();
 
     //ricaviamo l'id dall'url di rotta
     const { id } = useParams();
@@ -95,28 +99,63 @@ function ProductPage() {
 
                             return (
                                 <div key={p.id} className="related-card">
-                                    <Link
-                                        className="related-card-link"
-                                        to={`/product/${p.slug}`}>
-                                        <div className="related-card-title-container">
-                                            {isOnSale ? (
-                                                // se c'è sconto, mostriamo prezzo originale barrato e prezzo scontato
+
+                                    <div className="related-card-title-container">
+                                        {isOnSale ? (
+                                            // se c'è sconto, mostriamo prezzo originale barrato e prezzo scontato
+                                            <div className="related-card-price-button-container">
                                                 <h4>
                                                     <span style={{ textDecoration: 'line-through', color: '#999' }}>
                                                         €{price.toFixed(2)}
                                                     </span>{' '}
                                                     <span style={{ color: 'red' }}>
                                                         €{finalPrice.toFixed(2)}
-                                                    </span> / {p.weight}g
+                                                    </span>/{p.weight}g
                                                 </h4>
-                                            ) : (
-                                                // altrimenti mostriamo solo il prezzo normale
+                                                <div className="card-button-container">
+                                                    <button
+                                                        className="card-button"
+                                                        onClick={() => addToCart(product)}>
+                                                        <FaCartPlus />
+                                                    </button>
+
+                                                    <button
+                                                        className="card-button"
+                                                        onClick={() => addToWishlist(product)}>
+                                                        <FaHeart />
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            // altrimenti mostriamo solo il prezzo normale
+                                            <div className="related-card-price-button-container">
                                                 <h4>€{price.toFixed(2)} / {p.weight}g</h4>
-                                            )}
+                                                <div className="card-button-container">
+                                                    <button
+                                                        className="card-button"
+                                                        onClick={() => addToCart(product)}>
+                                                        <FaCartPlus />
+                                                    </button>
+
+                                                    <button
+                                                        className="card-button"
+                                                        onClick={() => addToWishlist(product)}>
+                                                        <FaHeart />
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        )}
+                                        <Link
+                                            className="related-card-link"
+                                            to={`/product/${p.slug}`}>
                                             <h4
                                                 className="related-card-title"
-                                            > {p.name} </h4>
-                                        </div>
+                                            > {p.name}
+                                            </h4>
+                                        </Link>
+                                    </div>
+                                    <Link
+                                        to={`/product/${p.slug}`}>
                                         <div className="related-card-img-container">
                                             <img
                                                 className="related-card-img"
@@ -124,13 +163,15 @@ function ProductPage() {
                                         </div>
                                     </Link>
                                 </div>
+
                             )
                         })}
                     </div>
                 </>
-            )}
+            )
+            }
 
-        </main>
+        </main >
     )
 }
 

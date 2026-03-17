@@ -58,8 +58,16 @@ function CartPage() {
                                         )}
                                     </div>
                                     <div className="cart-button-container">
-                                        <button onClick={() => addToCart(product)}>Aggiungi</button>
-                                        <button onClick={() => removeFromCart(product.id)}>Rimuovi</button>
+                                        <button
+                                            className="cart-button"
+                                            onClick={() => addToCart(product)}>
+                                            Aggiungi
+                                        </button>
+                                        <button
+                                            className="cart-button"
+                                            onClick={() => removeFromCart(product.id)}>
+                                            Rimuovi
+                                        </button>
                                     </div>
                                 </div>
                             </div>
