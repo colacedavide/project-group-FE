@@ -1,3 +1,4 @@
+//import { Link } from "react-router-dom";
 import { Link } from "react-router-dom";
 //importo useEffect
 import { useEffect, useState } from "react";
@@ -5,6 +6,8 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 //axios
 import axios from "axios";
+//import useGlobal
+import { useGlobal } from "../context/GlobalContext";
 
 function SearchPage() {
 
@@ -12,9 +15,9 @@ function SearchPage() {
     const searched = searchParams.get("query");
     //var di stato per salvare prodotti cercati dal db
     const [searchedItems, setSearchedItems] = useState([]);
-    //var di stato per caricameto chiamata axiois
+    //var di stato per caricameto chiamata axios
     const [isLoading, setIsLoading] = useState(true);
-    //var di stato che gestisce grilgiato o listato della pagina
+    //var di stato che gestisce grigliato o listato della pagina
     const [isGridActive, setIsGridActive] = useState(true)
     //var di stato per salvare le categorie che arrivano da db
     const [categories, setCategories] = useState([])
@@ -22,10 +25,13 @@ function SearchPage() {
     const [selectedCategory, setSelectedCategory] = useState("")
     //var di stato che salva regioni che arrivano dal db
     const [regions, setRegions] = useState([])
-    //var di stato che gestisce select untente
+    //var di stato che gestisce select utente
     const [selectedRegion, setSelectedRegions] = useState("")
 
-    //chiamata axios per riempire array regioni al montaggiuo del componente con use effect
+    //importiamo getProductPricing per gestire eventuali sconti
+    const { getProductPricing } = useGlobal();
+
+    //chiamata axios per riempire array regioni al montaggio del componente con useEffect
     useEffect(() => {
         //endpoint che punta alla regioni
         const endpoint = 'http://localhost:3000/api/regions'
@@ -39,9 +45,9 @@ function SearchPage() {
             });
     }, [])
 
-    //chiamata axiaos oer popolare array delle categoire al primo montaggio componente con use effect
+    //chiamata axios per popolare array delle categorie al primo montaggio componente con useEffect
     useEffect(() => {
-        //enpoint che mi richiama le categorie
+        //endpoint che mi richiama le categorie
         const endpoint = `http://localhost:3000/api/products/categories`
         //chiamata axios
         axios.get(endpoint)
@@ -57,7 +63,7 @@ function SearchPage() {
     useEffect(() => {
         setIsLoading(true);
         //salvo endpoint dentro una costante
-        const endpoint = `http://localhost:3000/api/products?search=${searched}&category=${selectedCategory}&region=${selectedRegion}` //uso backtic per inserrie van "searched" dentro la stringa
+        const endpoint = `http://localhost:3000/api/products?search=${searched}&category=${selectedCategory}&region=${selectedRegion}` //uso backtick per inserire var "searched" dentro la stringa
         //chiamata axios
         axios.get(endpoint)
             .then((res) => {
@@ -70,7 +76,7 @@ function SearchPage() {
             });
     }, [searched, selectedCategory, selectedRegion]);
 
-    //se is loading é true gestisci il caricamento
+    //se isLoading è true gestisci il caricamento
     if (isLoading) {
         return (
             <div className="loader-container">
@@ -80,7 +86,7 @@ function SearchPage() {
     }
 
     return (
-        <div>
+        <main>
 
             {/* select categoria */}
             <div className="filter-section">
@@ -108,31 +114,51 @@ function SearchPage() {
 
             {searchedItems.length > 0 ? (
                 <div>
-                    <h2>risultati per: {searched}</h2>
+                    <h2>Risultati per: {searched}</h2>
                     <button onClick={() => { setIsGridActive(true) }}>Vista Griglia</button>
                     <button onClick={() => { setIsGridActive(false) }}>Vista Lista</button>
                     <div className={isGridActive ? "home-container" : "list-layout"}>
-                        {searchedItems.map(item => <div className={isGridActive ? "card-container" : "list-item"}
-                            key={item.id}>
-                            {/* operatore logico && per mostarere immagine solo se isGridActive é true */}
-                            {isGridActive && (
-                                <div className="img-container">
-                                    <img className="card-image" src={item.image} alt={item.name} />
+                        {searchedItems.map(item => {
+                            //calcolo prezzi con getProductPricing
+                            const { price, finalPrice, isOnSale } = getProductPricing(item);
+                            return (
+                                <div className={isGridActive ? "card-container" : "list-item"}
+                                    key={item.id}>
+                                    {/* operatore logico && per mostrare immagine solo se isGridActive è true */}
+                                    {isGridActive && (
+                                        <div className="img-container">
+                                            <img className="card-image" src={item.image} alt={item.name} />
+                                        </div>
+                                    )}
+                                    <div className="text-container">
+                                        <Link className="card-link" to={`/product/${item.slug}`}>
+                                            {item.name}
+                                        </Link>
+                                        <div>{item.weight} g</div>
+                                        <div className="card-price">
+                                            Prezzo: {isOnSale ? (
+                                                <>
+                                                    <span style={{ textDecoration: 'line-through', color: '#999' }}>
+                                                        €{price.toFixed(2)}
+                                                    </span>{' '}
+                                                    <span style={{ color: 'red' }}>
+                                                        €{finalPrice.toFixed(2)}
+                                                    </span>
+                                                </>
+                                            ) : (
+                                                <>€{price.toFixed(2)}</>
+                                            )}
+                                        </div>
+                                    </div>
                                 </div>
-                            )}
-                            <div className="text-container">
-                                <Link className="card-link" to={`/product/${item.slug}`}>
-                                    {item.name}
-                                </Link>
-                                <div>{item.weight} g</div>
-                                <div className="card-price">prezzo: {item.price} &euro;</div>
-                            </div>
-                        </div>)}
+                            )
+                        })}
                     </div>
-                </div>) : (<p>Nessun prodotto trovato per "{searched}"</p>)}
+                </div>
+            ) : (<p>Nessun prodotto trovato per "{searched}"</p>)}
 
-        </div>
+        </main>
     )
 }
 
-export default SearchPage
+export default SearchPage;
