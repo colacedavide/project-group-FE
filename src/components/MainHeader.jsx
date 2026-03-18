@@ -8,7 +8,7 @@ import { useGlobal } from "../context/GlobalContext";
 function MainHeader() {
 
     //importiamo gli elementi che ci servono dal contesto globale
-    const { onlyDiscounted, setOnlyDiscounted } = useGlobal();
+    const { onlyDiscounted, setOnlyDiscounted, cartItemCount, wishlistItemCount } = useGlobal();
 
     //uso useLocation per ottenere informazioni sulla posizione attuale dell'utente
     const location = useLocation();
@@ -35,6 +35,9 @@ function MainHeader() {
                         className="header-link"
                         to={"/wishlist"}>
                         Lista dei desideri
+                        {wishlistItemCount > 0 && (
+                            <span className="wishlist-badge">{wishlistItemCount}</span>
+                        )}
                     </NavLink>
                 </li>
                 <li>
@@ -42,6 +45,9 @@ function MainHeader() {
                         className="header-link"
                         to={"/cart"}>
                         Carrello
+                        {cartItemCount > 0 && (
+                            <span className="cart-badge">{cartItemCount}</span>
+                        )}
                     </NavLink>
                 </li>
             </ul>

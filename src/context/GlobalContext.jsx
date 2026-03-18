@@ -196,7 +196,15 @@ function GlobalProvider({ children }) {
     }
 
     //creiamo una varibile di stato per la wishlist
-    const [wishlist, setWishlist] = useState([]);
+    const [wishlist, setWishlist] = useState(() => {
+        const savedWishlist = localStorage.getItem("wishlist");
+        return savedWishlist ? JSON.parse(savedWishlist) : [];
+    });
+
+    //salviamo la wishlist nel browswer al al cambio della varibile di stato wishlist
+    useEffect(() => {
+        localStorage.setItem("wishlist", JSON.stringify(wishlist));
+    }, [wishlist]);
 
     //creiamo una funzione per aggiungere i prodotti alla wishlist
     function addToWishlist(product) {
@@ -221,6 +229,12 @@ function GlobalProvider({ children }) {
             //utiliziamo un filter per ircrare l'array senza il prodotto con l'id selezioanto
             prev.filter(p => p.id !== id));
     }
+
+    //creiamo funzione per contare prdotti carrello
+    const cartItemCount = cart.reduce((total, item) => total + item.quantity, 0);
+
+    //creiamo funzione per contare prodotti whislist
+    const wishlistItemCount = wishlist.length;
 
     return (
         <GlobalContext.Provider
@@ -256,7 +270,9 @@ function GlobalProvider({ children }) {
                 removeFromWishlist,
                 getProductPricing,
                 onlyDiscounted,
-                setOnlyDiscounted
+                setOnlyDiscounted,
+                cartItemCount,
+                wishlistItemCount
             }}
         >
             {children}
