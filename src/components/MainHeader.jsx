@@ -26,13 +26,6 @@ function MainHeader() {
                 <li>
                     <NavLink
                         className="header-link"
-                        to={"/region"}>
-                        Regioni
-                    </NavLink>
-                </li>
-                <li>
-                    <NavLink
-                        className="header-link"
                         to={"/wishlist"}>
                         Lista dei desideri
                         {wishlistItemCount > 0 && (

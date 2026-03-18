@@ -28,7 +28,6 @@ function App() {
           <Route element={<DefaultLayout />} >
             <Route path="/" element={<HomePage />} />
             <Route path="/product/:id" element={<ProductPage />} />
-            <Route path="/region/" element={<RegionPage />} />
             <Route path="/region/:name/products" element={<RegionProductPage />} />
             <Route path="/cart/" element={<CartPage />} />
             <Route path="/checkout/" element={<CheckoutPage />} />
