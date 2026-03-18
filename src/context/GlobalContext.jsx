@@ -9,6 +9,9 @@ const GlobalContext = createContext();
 
 function GlobalProvider({ children }) {
 
+    //creo una varibnile di stato per filtrare i prodotti in sconto
+    const [onlyDiscounted, setOnlyDiscounted] = useState(false);
+
     //creiamo una variabile di stato per settare l'attivazione e la disattivazione del Loader
     const [isLoading, setIsLoading] = useState(false);
 
@@ -251,7 +254,9 @@ function GlobalProvider({ children }) {
                 setWishlist,
                 addToWishlist,
                 removeFromWishlist,
-                getProductPricing
+                getProductPricing,
+                onlyDiscounted,
+                setOnlyDiscounted
             }}
         >
             {children}

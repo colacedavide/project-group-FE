@@ -19,11 +19,7 @@ import ProductCard from "../components/ProductCard";
 function HomePage() {
 
     //importiamo gli elementi che ci servono tramite la useContext
-    const { products, fetchProducts, fetchRegions, setIsLoading, regions } = useGlobal();
-
-
-    //creazione varibile di stato come stringa vuota
-    const [selected, setSelected] = useState("");
+    const { products, fetchProducts, fetchRegions, setIsLoading, regions, onlyDiscounted, setOnlyDiscounted } = useGlobal();
 
     //var di stato per prodotti favoriti
     const [favorites, setFavorites] = useState([]);
@@ -33,6 +29,9 @@ function HomePage() {
 
     //var prodotti random
     const [randomProducts, setRandomProducts] = useState([]);
+
+    //creo una varibile di stato per i prodotti in promozione 
+    const [discountedProducts, setDiscountedProducts] = useState([]);
 
     function fetchFavorites() {
 
@@ -83,18 +82,6 @@ function HomePage() {
             });
     }
 
-
-
-    //creiamo una funzione per recuperare il valore selezionato dalla select
-    const handleChange = (e) => {
-        setSelected(e.target.value);
-    };
-
-
-
-    //creazione varibile endpoint in un salvare l'API
-    const endpointProductsRegion = `http://localhost:3000/api/regions/name/${selected}/products`;
-
     //creazione varbile di stato come un array vuoto
     const [productsRegion, setProductsRegion] = useState([]);
 
@@ -116,13 +103,6 @@ function HomePage() {
             });
     };
 
-    //richiamo la funzione ogni volta che cambia il name
-    useEffect(() => {
-        if (selected !== "") {
-            fetchRegionProducts();
-        }
-    }, [selected]);
-
     //richiamiamo la funzione fetchProducts e fetchRegions (una sola volta) al motnaggio della pagine grazie ad useEffect
     useEffect(() => {
 
@@ -138,65 +118,64 @@ function HomePage() {
 
     }, []);
 
-
-    console.log(productsRegion);
+    //richiamo la funzione ogni volta che cambia onlyDiscounted
+    useEffect(() => {
+        if (onlyDiscounted) {
+            setIsLoading(true);
+            axios.get("http://localhost:3000/api/products/discounted")
+                .then(res => {
+                    // Assicurati che sia un array
+                    const data = Array.isArray(res.data) ? res.data : res.data.results || [];
+                    setDiscountedProducts(data);
+                })
+                .catch(err => console.log(err))
+                .finally(() => setIsLoading(false));
+        }
+    }, [onlyDiscounted]);
 
     return (
-        <main>
+        <>
             <div className="hero-section">
                 <HeroSection />
             </div>
 
-            {/*<select value={selected} onChange={handleChange}>
-                <option value="">-- Seleziona una regione --</option>
-                {regions?.map((region) => (
-                    <option key={region.id} value={region.name}>
-                        {region.name}
-                    </option>
-                ))}
-            </select>*/}
+            <main>
 
-            {selected === "" ? (
-                <>
-                    <h2 className="home-subtitle">Tavola dei preferiti</h2>
-                    <div className="home-container">
-                        {favorites.map(product => (
-                            <ProductCard key={product.id} product={product} />
-                        ))}
-                    </div>
+                {onlyDiscounted ? (
+                    <>
+                        <h2 className="home-subtitle">Prodotti in promozione</h2>
+                        <div className="home-container">
+                            {discountedProducts.map(product => (
+                                <ProductCard key={product.id} product={product} />
+                            ))}
+                        </div>
+                    </>
+                ) : (
+                    <>
+                        <h2 className="home-subtitle">Tavola dei preferiti</h2>
+                        <div className="home-container">
+                            {favorites.map(product => (
+                                <ProductCard key={product.id} product={product} />
+                            ))}
+                        </div>
 
-                    <h2 className="home-subtitle">Tavola degli oli</h2>
-                    <div className="home-container">
-                        {oils.map(product => (
-                            <ProductCard key={product.id} product={product} />
-                        ))}
-                    </div >
+                        <h2 className="home-subtitle">Tavola degli oli</h2>
+                        <div className="home-container">
+                            {oils.map(product => (
+                                <ProductCard key={product.id} product={product} />
+                            ))}
+                        </div>
 
-                    <h2 className="home-subtitle">Tavola imbandita</h2>
-                    <div className="home-container">
-                        {randomProducts.map(product => (
-                            <ProductCard key={product.id} product={product} />
-                        ))}
-                    </div >
-                </>
-            ) : (
-                <>
-                    <h2 className="home-subtitle">Tavola imbandita</h2>
-                    <div className="home-container">
-                        {productsRegion.map(product => (
-                            <ProductCard
-                                key={product.id}
-                                product={product}
-                                imageOverride={(image) =>
-                                    image.replace('regions-images', 'product-images')
-                                }
-                            />
-                        ))}
-                    </div>
-                </>
-            )
-            }
-        </main >
+                        <h2 className="home-subtitle">Tavola imbandita</h2>
+                        <div className="home-container">
+                            {randomProducts.map(product => (
+                                <ProductCard key={product.id} product={product} />
+                            ))}
+                        </div>
+                    </>
+                )}
+            </main >
+        </>
     )
 }
 

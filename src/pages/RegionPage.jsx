@@ -20,8 +20,6 @@ function RegionPage() {
                             key={region.id}
                             to={`/region/${encodeURIComponent(region.name)}/products`}
                         >
-                            <div className="region-pin"></div>
-
                             <div className="region-img-container">
                                 <img
                                     className="card-image"

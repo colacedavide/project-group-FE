@@ -1,9 +1,17 @@
-//import NavLink
-import { NavLink } from "react-router-dom"
+//import NavLink e useLocation
+import { NavLink, useLocation } from "react-router-dom"
 //importo searchBar
 import SearchBar from "./SearchBar"
+//import useGlobal per accedere al contesto globale
+import { useGlobal } from "../context/GlobalContext";
 
 function MainHeader() {
+
+    //importiamo gli elementi che ci servono dal contesto globale
+    const { onlyDiscounted, setOnlyDiscounted } = useGlobal();
+
+    //uso useLocation per ottenere informazioni sulla posizione attuale dell'utente
+    const location = useLocation();
 
     return (
         <header>
@@ -38,7 +46,16 @@ function MainHeader() {
                 </li>
             </ul>
 
-            <SearchBar />
+            {(location.pathname === "/" || location.pathname.startsWith("/search")) && (
+                <div className="header-serch-container">
+                    <button
+                        className="header-discount-button"
+                        onClick={() => setOnlyDiscounted(prev => !prev)}>
+                        {onlyDiscounted ? "Mostra tutti" : "Prodotti in promozione"}
+                    </button>
+                    <SearchBar />
+                </div>
+            )}
         </header>
     )
 }
