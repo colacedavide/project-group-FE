@@ -118,75 +118,110 @@ function CheckoutPage() {
                     <div className="checkout-dates-container">
                         <div className="checkout-dates">
                             <h2>Dati spedizione</h2>
+
                             <div className="checkout-input-container">
-                                <input
-                                    placeholder="Nome"
-                                    name="name"
-                                    value={shippingData?.name || ""}
-                                    onChange={handleChangeShippingData}
-                                    required
-                                />
-                                <input
-                                    placeholder="Cognome"
-                                    name="surname"
-                                    value={shippingData?.surname || ""}
-                                    onChange={handleChangeShippingData}
-                                    required
-                                />
-                                <input
-                                    placeholder="Email"
-                                    name="email"
-                                    value={shippingData?.email || ""}
-                                    onChange={handleChangeShippingData}
-                                    required
-                                />
-                                <input
-                                    placeholder="Telefono"
-                                    name="phone"
-                                    value={shippingData?.phone || ""}
-                                    onChange={handleChangeShippingData}
-                                    required
-                                />
-                                <input
-                                    placeholder="Via"
-                                    name="street"
-                                    value={shippingData?.street || ""}
-                                    onChange={handleChangeShippingData}
-                                    required
-                                />
-                                <input
-                                    placeholder="Città"
-                                    name="city"
-                                    value={shippingData?.city || ""}
-                                    onChange={handleChangeShippingData}
-                                    required
-                                />
-                                <input
-                                    placeholder="Regione"
-                                    name="region"
-                                    value={shippingData?.region || ""}
-                                    onChange={handleChangeShippingData}
-                                    required
-                                />
-                                <input
-                                    placeholder="Provincia"
-                                    name="province"
-                                    value={shippingData?.province || ""}
-                                    onChange={handleChangeShippingData}
-                                    required />
-                                <input
-                                    placeholder="CAP"
-                                    name="postal_code"
-                                    value={shippingData?.postal_code || ""}
-                                    onChange={handleChangeShippingData}
-                                    required />
-                                <input
-                                    placeholder="Nazione"
-                                    name="country"
-                                    value={shippingData?.country || ""}
-                                    onChange={handleChangeShippingData}
-                                    required
-                                />
+
+                                <label>
+                                    Nome
+                                    <input
+                                        name="name"
+                                        value={shippingData?.name || ""}
+                                        onChange={handleChangeShippingData}
+                                        required
+                                    />
+                                </label>
+
+                                <label>
+                                    Cognome
+                                    <input
+                                        name="surname"
+                                        value={shippingData?.surname || ""}
+                                        onChange={handleChangeShippingData}
+                                        required
+                                    />
+                                </label>
+
+                                <label>
+                                    Email
+                                    <input
+                                        type="email"
+                                        name="email"
+                                        value={shippingData?.email || ""}
+                                        onChange={handleChangeShippingData}
+                                        required
+                                    />
+                                </label>
+
+                                <label>
+                                    Telefono
+                                    <input
+                                        name="phone"
+                                        value={shippingData?.phone || ""}
+                                        onChange={handleChangeShippingData}
+                                        required
+                                    />
+                                </label>
+
+                                <label>
+                                    Via
+                                    <input
+                                        name="street"
+                                        value={shippingData?.street || ""}
+                                        onChange={handleChangeShippingData}
+                                        required
+                                    />
+                                </label>
+
+                                <label>
+                                    Città
+                                    <input
+                                        name="city"
+                                        value={shippingData?.city || ""}
+                                        onChange={handleChangeShippingData}
+                                        required
+                                    />
+                                </label>
+
+                                <label>
+                                    Regione
+                                    <input
+                                        name="region"
+                                        value={shippingData?.region || ""}
+                                        onChange={handleChangeShippingData}
+                                        required
+                                    />
+                                </label>
+
+                                <label>
+                                    Provincia
+                                    <input
+                                        name="province"
+                                        value={shippingData?.province || ""}
+                                        onChange={handleChangeShippingData}
+                                        required
+                                    />
+                                </label>
+
+                                <label>
+                                    CAP
+                                    <input
+                                        name="postal_code"
+                                        value={shippingData?.postal_code || ""}
+                                        onChange={handleChangeShippingData}
+                                        required
+                                    />
+                                </label>
+
+                                <label>
+                                    Nazione
+                                    <input
+                                        name="country"
+                                        value={shippingData?.country || ""}
+                                        onChange={handleChangeShippingData}
+                                        required
+                                    />
+                                </label>
+
                             </div>
                         </div>
 
@@ -212,76 +247,106 @@ function CheckoutPage() {
                             </div>
 
                             <div className="checkout-input-container">
-                                <input
-                                    placeholder="Nome"
-                                    name="name"
-                                    value={billingData?.name || ""}
-                                    onChange={handleChangeBillingData}
-                                    required
-                                />
-                                <input
-                                    placeholder="Cognome"
-                                    name="surname"
-                                    value={billingData?.surname || ""}
-                                    onChange={handleChangeBillingData}
-                                    required
-                                />
-                                <input
-                                    placeholder="Email"
-                                    name="email"
-                                    value={billingData?.email || ""}
-                                    onChange={handleChangeBillingData}
-                                    required
-                                />
-                                <input
-                                    placeholder="Telefono"
-                                    name="phone"
-                                    value={billingData?.phone || ""}
-                                    onChange={handleChangeBillingData}
-                                    required
-                                />
-                                <input
-                                    placeholder="Via"
-                                    name="street"
-                                    value={billingData?.street || ""}
-                                    onChange={handleChangeBillingData}
-                                    required
-                                />
-                                <input
-                                    placeholder="Città"
-                                    name="city"
-                                    value={billingData?.city || ""}
-                                    onChange={handleChangeBillingData}
-                                    required
-                                />
-                                <input
-                                    placeholder="Regione"
-                                    name="region"
-                                    value={billingData?.region || ""}
-                                    onChange={handleChangeBillingData}
-                                    required
-                                />
-                                <input
-                                    placeholder="Provincia"
-                                    name="province"
-                                    value={billingData?.province || ""}
-                                    onChange={handleChangeBillingData}
-                                    required
-                                />
-                                <input
-                                    placeholder="CAP"
-                                    name="postal_code"
-                                    value={billingData?.postal_code || ""}
-                                    onChange={handleChangeBillingData}
-                                    required
-                                />
-                                <input
-                                    placeholder="Nazione"
-                                    name="country"
-                                    value={billingData?.country || ""}
-                                    onChange={handleChangeBillingData}
-                                    required
-                                />
+                                <label>
+                                    Nome
+                                    <input
+                                        name="name"
+                                        value={billingData?.name || ""}
+                                        onChange={handleChangeBillingData}
+                                        required
+                                    />
+                                </label>
+
+                                <label>
+                                    Cognome
+                                    <input
+                                        name="surname"
+                                        value={billingData?.surname || ""}
+                                        onChange={handleChangeBillingData}
+                                        required
+                                    />
+                                </label>
+
+                                <label>
+                                    Email
+                                    <input
+                                        type="email"
+                                        name="email"
+                                        value={billingData?.email || ""}
+                                        onChange={handleChangeBillingData}
+                                        required
+                                    />
+                                </label>
+
+                                <label>
+                                    Telefono
+                                    <input
+                                        name="phone"
+                                        value={billingData?.phone || ""}
+                                        onChange={handleChangeBillingData}
+                                        required
+                                    />
+                                </label>
+
+                                <label>
+                                    Via
+                                    <input
+                                        name="street"
+                                        value={billingData?.street || ""}
+                                        onChange={handleChangeBillingData}
+                                        required
+                                    />
+                                </label>
+
+                                <label>
+                                    Città
+                                    <input
+                                        name="city"
+                                        value={billingData?.city || ""}
+                                        onChange={handleChangeBillingData}
+                                        required
+                                    />
+                                </label>
+
+                                <label>
+                                    Regione
+                                    <input
+                                        name="region"
+                                        value={billingData?.region || ""}
+                                        onChange={handleChangeBillingData}
+                                        required
+                                    />
+                                </label>
+
+                                <label>
+                                    Provincia
+                                    <input
+                                        name="province"
+                                        value={billingData?.province || ""}
+                                        onChange={handleChangeBillingData}
+                                        required
+                                    />
+                                </label>
+
+                                <label>
+                                    CAP
+                                    <input
+                                        name="postal_code"
+                                        value={billingData?.postal_code || ""}
+                                        onChange={handleChangeBillingData}
+                                        required
+                                    />
+                                </label>
+
+                                <label>
+                                    Nazione
+                                    <input
+                                        name="country"
+                                        value={billingData?.country || ""}
+                                        onChange={handleChangeBillingData}
+                                        required
+                                    />
+                                </label>
                             </div>
                         </div>
                     </div>

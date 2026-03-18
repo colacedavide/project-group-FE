@@ -64,14 +64,6 @@ function ProductCardDetails({ product }) {
                             Aggiungi alla lista desideri
                         </button>
                     </div>
-                    <div className="back-to-home-button-container">
-                        <Link
-                            className="back-to-home-button"
-                            to="/">
-                            Torna alla Home
-                        </Link>
-                    </div>
-
                 </div>
 
 
