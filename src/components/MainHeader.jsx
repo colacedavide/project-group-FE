@@ -36,7 +36,7 @@ function MainHeader() {
                         to={"/wishlist"}>
                         Lista dei desideri
                         {wishlistItemCount > 0 && (
-                            <span className="wishlist-badge">{wishlistItemCount}</span>
+                            <span className="header-badge">{wishlistItemCount}</span>
                         )}
                     </NavLink>
                 </li>
@@ -46,7 +46,7 @@ function MainHeader() {
                         to={"/cart"}>
                         Carrello
                         {cartItemCount > 0 && (
-                            <span className="cart-badge">{cartItemCount}</span>
+                            <span className="header-badge">{cartItemCount}</span>
                         )}
                     </NavLink>
                 </li>
