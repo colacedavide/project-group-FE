@@ -41,7 +41,7 @@ function MainHeader() {
                     <NavLink
                         className="header-link"
                         to={"/cart"}>
-                        Carello
+                        Carrello
                     </NavLink>
                 </li>
             </ul>
