@@ -36,7 +36,7 @@ main {
     position: absolute;
     top: 15px;
     right: -15px;
-    background-color:teal;
+    background-color: teal;
     color: white;
     font-size: 18px;
     font-weight: bold;
@@ -46,7 +46,7 @@ main {
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 header {
@@ -888,22 +888,27 @@ header {
     flex-basis: 15%;
 }
 
-.add-wishlist-button {
+.wishlist-add-cart-button {
     padding: 12px 20px;
-    border-radius: 6px;
-    background-color: #1C2027;
+    background-color: #006d6d;
     color: white;
-
+    border-radius: 6px;
     border: none;
     cursor: pointer;
+    border: 2px solid #1C2027;
+    font-size: 1.2rem;
+}
+
+.wishlist-add-cart-button:hover {
+    background-color: #004d4d;
 }
 
 .remove-wishlist-button {
     padding: 12px 20px;
-    background-color: #1C2027;
-    color: white;
+    background-color: white;
+    color: #1C2027;
     border-radius: 6px;
-    border: none;
+    border: 2px solid #1C2027;
     cursor: pointer;
 }
 

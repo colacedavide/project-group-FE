@@ -55,17 +55,19 @@ function WishlistPage() {
 
                                 <div className="wishlist-button-container">
                                     <button
+                                        onClick={() => addToCart(product)}
+                                        className="wishlist-add-cart-button"
+                                    >
+                                        Aggiungi al carrello
+                                    </button>
+
+                                    <button
                                         className="remove-wishlist-button"
                                         onClick={() => removeFromWishlist(product.id)}
                                     >
                                         Rimuovi dalla lista desideri
                                     </button>
-                                    <button
-                                        onClick={() => addToCart(product)}
-                                        className="add-cart"
-                                    >
-                                        Aggiungi al carrello
-                                    </button>
+
                                 </div>
                             </div>
                         </div>
