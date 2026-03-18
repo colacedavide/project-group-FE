@@ -196,7 +196,15 @@ function GlobalProvider({ children }) {
     }
 
     //creiamo una varibile di stato per la wishlist
-    const [wishlist, setWishlist] = useState([]);
+    const [wishlist, setWishlist] = useState(() => {
+        const savedWishlist = localStorage.getItem("wishlist");
+        return savedWishlist ? JSON.parse(savedWishlist) : [];
+    });
+
+    //salviamo la wishlist nel browswer al al cambio della varibile di stato wishlist
+    useEffect(() => {
+        localStorage.setItem("wishlist", JSON.stringify(wishlist));
+    }, [wishlist]);
 
     //creiamo una funzione per aggiungere i prodotti alla wishlist
     function addToWishlist(product) {
