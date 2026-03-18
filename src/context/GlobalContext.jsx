@@ -230,6 +230,12 @@ function GlobalProvider({ children }) {
             prev.filter(p => p.id !== id));
     }
 
+    //creiamo funzione per contare prdotti carrello
+    const cartItemCount = cart.reduce((total, item) => total + item.quantity, 0);
+
+    //creiamo funzione per contare prodotti whislist
+    const wishlistItemCount = wishlist.length;
+
     return (
         <GlobalContext.Provider
             value={{
@@ -264,7 +270,9 @@ function GlobalProvider({ children }) {
                 removeFromWishlist,
                 getProductPricing,
                 onlyDiscounted,
-                setOnlyDiscounted
+                setOnlyDiscounted,
+                cartItemCount,
+                wishlistItemCount
             }}
         >
             {children}
