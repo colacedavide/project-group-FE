@@ -729,6 +729,24 @@ header {
     border: 1px solid #ccc;
 }
 
+.checkout-container {
+    display: flex;
+    gap: 2rem;
+    justify-content: space-around;
+}
+
+.checkout-dates-container {
+    flex-basis: 60%;
+}
+
+.checkout-button {
+    border: none;
+    background-color: teal;
+    padding: 0.2rem;
+    color: white;
+    border-radius: 5px;
+}
+
 /* SearchPage */
 
 .selcet-container {

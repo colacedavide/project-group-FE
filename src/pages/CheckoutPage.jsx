@@ -18,8 +18,50 @@ function CheckoutPage() {
     //creazione varibile endpoint in un salvare l'API
     const endpointCheckout = "http://localhost:3000/api/orders/checkout";
 
+    //funzione di validaizone
+    function validateFields(data) {
+        const requiredFields = [
+            "name",
+            "surname",
+            "email",
+            "phone",
+            "street",
+            "city",
+            "region",
+            "province",
+            "postal_code",
+            "country"
+        ];
+
+        for (let field of requiredFields) {
+            if (!data[field] || data[field].toString().trim() === "") {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     //creiamo una funzione per avviare la chiamta POST al click
     function handleCheckout() {
+
+        // VALIDAZIONE
+        const isShippingValid = validateFields(shippingData);
+
+        if (!isShippingValid) {
+            alert("Compila tutti i campi di spedizione");
+            return;
+        }
+
+        if (!sameAsShipping) {
+            const isBillingValid = validateFields(billingData);
+
+            if (!isBillingValid) {
+                alert("Compila tutti i campi di fatturazione");
+                return;
+            }
+        }
+
         axios.post(endpointCheckout, {
             shippingData,
             billingData,
@@ -60,8 +102,31 @@ function CheckoutPage() {
                 alert(message);
 
                 //reset dei campi
-                setShippingData({});
-                setBillingData({});
+                setShippingData({
+                    name: "",
+                    surname: "",
+                    email: "",
+                    phone: "",
+                    street: "",
+                    city: "",
+                    region: "",
+                    province: "",
+                    postal_code: "",
+                    country: ""
+                });
+
+                setBillingData({
+                    name: "",
+                    surname: "",
+                    email: "",
+                    phone: "",
+                    street: "",
+                    city: "",
+                    region: "",
+                    province: "",
+                    postal_code: "",
+                    country: ""
+                });
                 setDiscountCode("");
                 setCart([]);
                 setDiscountPercentage(0);
@@ -79,8 +144,7 @@ function CheckoutPage() {
         setShippingData(updatedShipping);
         //se sameAsShipping è vero
         if (sameAsShipping) {
-            //lo copiamo anche in billing data
-            setBillingData(updatedShipping);
+            setBillingData({ ...updatedShipping });
         }
     }
 
@@ -111,139 +175,146 @@ function CheckoutPage() {
 
     return (
         <main>
+
             <div className="checkout-container">
-                <div>
-                    <h2 className="cheackout-title">Checkout</h2>
 
-                    <div className="checkout-dates-container">
-                        <div className="checkout-dates">
-                            <h2>Dati spedizione</h2>
 
-                            <div className="checkout-input-container">
 
-                                <label>
-                                    Nome
-                                    <input
-                                        name="name"
-                                        value={shippingData?.name || ""}
-                                        onChange={handleChangeShippingData}
-                                        required
-                                    />
-                                </label>
 
-                                <label>
-                                    Cognome
-                                    <input
-                                        name="surname"
-                                        value={shippingData?.surname || ""}
-                                        onChange={handleChangeShippingData}
-                                        required
-                                    />
-                                </label>
+                <div className="checkout-dates-container">
+                    <div className="checkout-dates">
+                        <h2>Dati spedizione</h2>
 
-                                <label>
-                                    Email
-                                    <input
-                                        type="email"
-                                        name="email"
-                                        value={shippingData?.email || ""}
-                                        onChange={handleChangeShippingData}
-                                        required
-                                    />
-                                </label>
+                        <label>
+                            <input
+                                type="checkbox"
+                                checked={sameAsShipping}
+                                onChange={(e) => {
+                                    const checked = e.target.checked;
+                                    setSameAsShipping(checked);
 
-                                <label>
-                                    Telefono
-                                    <input
-                                        name="phone"
-                                        value={shippingData?.phone || ""}
-                                        onChange={handleChangeShippingData}
-                                        required
-                                    />
-                                </label>
+                                    if (checked) {
+                                        setBillingData({ ...shippingData });
+                                    }
+                                }}
+                            />
+                            Usa gli stessi dati della spedizione per la fatturazione
+                        </label>
 
-                                <label>
-                                    Via
-                                    <input
-                                        name="street"
-                                        value={shippingData?.street || ""}
-                                        onChange={handleChangeShippingData}
-                                        required
-                                    />
-                                </label>
+                        <div className="checkout-input-container">
 
-                                <label>
-                                    Città
-                                    <input
-                                        name="city"
-                                        value={shippingData?.city || ""}
-                                        onChange={handleChangeShippingData}
-                                        required
-                                    />
-                                </label>
+                            <label>
+                                Nome
+                                <input
+                                    name="name"
+                                    value={shippingData?.name || ""}
+                                    onChange={handleChangeShippingData}
+                                    required
+                                />
+                            </label>
 
-                                <label>
-                                    Regione
-                                    <input
-                                        name="region"
-                                        value={shippingData?.region || ""}
-                                        onChange={handleChangeShippingData}
-                                        required
-                                    />
-                                </label>
+                            <label>
+                                Cognome
+                                <input
+                                    name="surname"
+                                    value={shippingData?.surname || ""}
+                                    onChange={handleChangeShippingData}
+                                    required
+                                />
+                            </label>
 
-                                <label>
-                                    Provincia
-                                    <input
-                                        name="province"
-                                        value={shippingData?.province || ""}
-                                        onChange={handleChangeShippingData}
-                                        required
-                                    />
-                                </label>
+                            <label>
+                                Email
+                                <input
+                                    type="email"
+                                    name="email"
+                                    value={shippingData?.email || ""}
+                                    onChange={handleChangeShippingData}
+                                    required
+                                />
+                            </label>
 
-                                <label>
-                                    CAP
-                                    <input
-                                        name="postal_code"
-                                        value={shippingData?.postal_code || ""}
-                                        onChange={handleChangeShippingData}
-                                        required
-                                    />
-                                </label>
+                            <label>
+                                Telefono
+                                <input
+                                    name="phone"
+                                    value={shippingData?.phone || ""}
+                                    onChange={handleChangeShippingData}
+                                    required
+                                />
+                            </label>
 
-                                <label>
-                                    Nazione
-                                    <input
-                                        name="country"
-                                        value={shippingData?.country || ""}
-                                        onChange={handleChangeShippingData}
-                                        required
-                                    />
-                                </label>
+                            <label>
+                                Via
+                                <input
+                                    name="street"
+                                    value={shippingData?.street || ""}
+                                    onChange={handleChangeShippingData}
+                                    required
+                                />
+                            </label>
 
-                            </div>
+                            <label>
+                                Città
+                                <input
+                                    name="city"
+                                    value={shippingData?.city || ""}
+                                    onChange={handleChangeShippingData}
+                                    required
+                                />
+                            </label>
+
+                            <label>
+                                Regione
+                                <input
+                                    name="region"
+                                    value={shippingData?.region || ""}
+                                    onChange={handleChangeShippingData}
+                                    required
+                                />
+                            </label>
+
+                            <label>
+                                Provincia
+                                <input
+                                    name="province"
+                                    value={shippingData?.province || ""}
+                                    onChange={handleChangeShippingData}
+                                    required
+                                />
+                            </label>
+
+                            <label>
+                                CAP
+                                <input
+                                    name="postal_code"
+                                    value={shippingData?.postal_code || ""}
+                                    onChange={handleChangeShippingData}
+                                    required
+                                />
+                            </label>
+
+                            <label>
+                                Nazione
+                                <input
+                                    name="country"
+                                    value={shippingData?.country || ""}
+                                    onChange={handleChangeShippingData}
+                                    required
+                                />
+                            </label>
+
                         </div>
+                    </div>
+
+
+                    {!sameAsShipping && (
 
                         <div className="checkout-dates">
                             <div className="cheackout-billing-title">
                                 <h2>Dati fatturazione</h2>
 
-                                <label>
-                                    <input
-                                        type="checkbox"
-                                        checked={sameAsShipping}
-                                        onChange={(e) => {
-                                            const checked = e.target.checked;
-                                            setSameAsShipping(checked);
 
-                                            if (checked) {
-                                                setBillingData(shippingData);
-                                            }
-                                        }}
-                                    />
-                                    Usa gli stessi dati della spedizione
-                                </label>
                             </div>
 
                             <div className="checkout-input-container">
@@ -348,61 +419,64 @@ function CheckoutPage() {
                                     />
                                 </label>
                             </div>
+
                         </div>
-                    </div>
+                    )}
                 </div>
-                <div>
-
-                    <div className="checkout-footer">
-
-                        <div className="checkout-discount-container">
-                            <div>
-                                <h2>Codice sconto</h2>
-                                <input
-                                    placeholder="Inserisci codice sconto"
-                                    value={discountCode || ""}
-                                    onChange={e => setDiscountCode(e.target.value)}
-                                />
-                                <button
-                                    type="button"
-                                    onClick={applyDiscount}
-                                >
-                                    Applica
-                                </button>
-                                {discountPercentage > 0 && (
-                                    <p>Sconto applicato: {discountPercentage}%</p>
-                                )}
-                            </div>
-                            <div>
-                                <h4>
-                                    Totale carrello: €{cartTotal.toFixed(2)}
-                                </h4>
-                                {discountPercentage > 0 && (
-                                    <h5>
-                                        Sconto applicato: €{discountAmount.toFixed(2)} ({discountPercentage}%)
-                                    </h5>
-                                )}
-                                <h4>
-                                    Spedizione: {shippingPrice === 0 ? "Gratuita" : `€${shippingPrice.toFixed(2)}`}
-                                </h4>
-                                <h3>
-                                    Totale finale: €{totalFinal.toFixed(2)}
-                                </h3>
-                            </div>
-                        </div>
 
 
 
-                        <div className="checkout-button-container">
+                <div className="checkout-footer">
+
+                    <div className="checkout-discount-container">
+                        <div>
+                            <h2>Codice sconto</h2>
+                            <input
+                                placeholder="Inserisci codice sconto"
+                                value={discountCode || ""}
+                                onChange={e => setDiscountCode(e.target.value)}
+                            />
                             <button
-                                type="button"
                                 className="checkout-button"
-                                onClick={handleCheckout}>
-                                Conferma ordine
+                                type="button"
+                                onClick={applyDiscount}
+                            >
+                                Applica
                             </button>
+                            {discountPercentage > 0 && (
+                                <p>Sconto applicato: {discountPercentage}%</p>
+                            )}
+                        </div>
+                        <div>
+                            <h4>
+                                Totale carrello: €{cartTotal.toFixed(2)}
+                            </h4>
+                            {discountPercentage > 0 && (
+                                <h5>
+                                    Sconto applicato: €{discountAmount.toFixed(2)} ({discountPercentage}%)
+                                </h5>
+                            )}
+                            <h4>
+                                Spedizione: {shippingPrice === 0 ? "Gratuita" : `€${shippingPrice.toFixed(2)}`}
+                            </h4>
+                            <h3>
+                                Totale finale: €{totalFinal.toFixed(2)}
+                            </h3>
                         </div>
                     </div>
+
+
+
+                    <div className="checkout-button-container">
+                        <button
+                            type="button"
+                            className="checkout-button"
+                            onClick={handleCheckout}>
+                            Conferma ordine
+                        </button>
+                    </div>
                 </div>
+
             </div>
         </main>
     );

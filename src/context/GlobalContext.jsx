@@ -85,8 +85,31 @@ function GlobalProvider({ children }) {
     }, [cart]);
 
     //creazione variabili si statp per indirizzi di spedizione e fatturazione
-    const [shippingData, setShippingData] = useState({});
-    const [billingData, setBillingData] = useState({});
+    const [shippingData, setShippingData] = useState({
+        name: "",
+        surname: "",
+        email: "",
+        phone: "",
+        street: "",
+        city: "",
+        region: "",
+        province: "",
+        postal_code: "",
+        country: ""
+    });
+
+    const [billingData, setBillingData] = useState({
+        name: "",
+        surname: "",
+        email: "",
+        phone: "",
+        street: "",
+        city: "",
+        region: "",
+        province: "",
+        postal_code: "",
+        country: ""
+    });
 
     //creiamo una funzione per aggiungere i prodotti al carello
     function addToCart(product) {
