@@ -683,8 +683,6 @@ header {
     padding: 1rem;
     border-radius: 10px;
     background-color: white;
-    position: sticky;
-    top: 100px;
 }
 
 .cart-price-text {
