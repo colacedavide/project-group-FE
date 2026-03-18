@@ -1006,6 +1006,12 @@ header {
         flex-basis: 30%;
         font-size: 0.8rem;
     }
+
+    .selcet-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
 }
 
 /* Mobile */

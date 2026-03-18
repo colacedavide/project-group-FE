@@ -330,6 +330,7 @@ function CheckoutPage() {
 
                         <div className="checkout-button-container">
                             <button
+                                type="button"
                                 className="checkout-button"
                                 onClick={handleCheckout}>
                                 Conferma ordine
