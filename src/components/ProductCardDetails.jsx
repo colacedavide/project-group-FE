@@ -54,12 +54,12 @@ function ProductCardDetails({ product }) {
                     <div className="product-button-container">
                         <button
                             onClick={() => addToCart(product)}
-                            className="add-cart">
+                            className="wishlist-add-cart-button">
                             Aggiungi al carrello
                         </button>
 
                         <button
-                            className="add-wishlist-button"
+                            className="remove-wishlist-button"
                             onClick={() => addToWishlist(product)}>
                             Aggiungi alla lista desideri
                         </button>
